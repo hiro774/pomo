@@ -21,13 +21,6 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState(""); // ← 追加
 
-  // 🔐 未ログインならログインページへ
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push("/login");
-  //   }
-  // }, [session, router]);
-
   // 📥 設定の読み込み
   useEffect(() => {
     const fetchSettings = async () => {
@@ -36,7 +29,7 @@ export default function Home() {
         return;
       }
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("settings")
         .select("*")
         .eq("id", session.user.id)
@@ -113,7 +106,7 @@ export default function Home() {
       work_minutes: workMinutes,
       break_minutes: breakMinutes,
       volume: volume,
-      video_url: videoUrl,
+      // video_url: videoUrl,
       updated_at: new Date().toISOString(),
     });
   };
@@ -124,103 +117,219 @@ export default function Home() {
 
   return (
     <>
-      <AuthButton />
-      <main className="flex flex-col items-center justify-center min-h-screen text-center px-4 transition-colors bg-white text-black dark:bg-gray-900 dark:text-white">
+      <div className="fixed top-10 right-20 z-10 flex items-center gap-2">
+        <AuthButton />
+      </div>
+
+      <div className="fixed top-4 left-4 z-10">
+        <Link
+          href="/settings"
+          className="text-sm bg-opacity-80 backdrop-blur-sm bg-gray-200 dark:bg-gray-800 px-3 py-1.5 rounded-full text-black dark:text-white hover:shadow-md transition-all flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          設定
+        </Link>
         <button
           onClick={toggleTheme}
-          className="absolute top-4 right-4 text-sm bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded"
+          className="text-sm bg-opacity-80 backdrop-blur-sm bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-3 py-1.5 rounded-full flex items-center transition-all hover:shadow-md"
         >
-          {isDark ? "ライトモード" : "ダークモード"}
+          {isDark ? "🌞 ライト" : "🌙 ダーク"}
         </button>
-        <div className="absolute top-20 left-4">
-          <Link
-            href="/settings"
-            className="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded text-black dark:text-white hover:underline"
-          >
-            設定画面へ
-          </Link>
-        </div>
+      </div>
 
+      <main className="flex flex-col items-center justify-center min-h-screen text-center px-4 transition-colors bg-gradient-to-b from-white to-gray-100 text-black dark:from-gray-900 dark:to-gray-800 dark:text-white">
         {session?.user && (
-          <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
-            {session.user.email} さん
-          </p>
+          <div className="absolute top-16 right-4 bg-opacity-80 backdrop-blur-sm bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm">
+            <p className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              {session.user.email} さん
+            </p>
+          </div>
         )}
 
-        <h1 className="text-4xl font-bold mb-4">🍅 ポモドーロタイマー</h1>
-        <p className="mb-2 text-lg">
-          {isWorkSession ? "作業中 ⏳" : "休憩中 ☕️"}
-        </p>
-        <div className="text-6xl font-mono mb-6">{formatTime(seconds)}</div>
+        <div className="w-full max-w-md mx-auto">
+          <div className="mb-8">
+            <div className="inline-block bg-opacity-70 backdrop-blur-sm bg-white dark:bg-gray-800 px-4 py-1 rounded-full shadow-sm">
+              <p className="text-lg font-medium">
+                {isWorkSession ? "作業中 ⏳" : "休憩中 ☕️"}
+              </p>
+            </div>
+          </div>
 
-        {/* タイマー操作 */}
-        <div className="flex gap-4 flex-wrap justify-center mb-6">
-          <button
-            onClick={handleStart}
-            className="bg-green-500 text-white px-6 py-2 rounded"
-          >
-            Start
-          </button>
-          <button
-            onClick={handleStop}
-            className="bg-red-500 text-white px-6 py-2 rounded"
-          >
-            Stop
-          </button>
-          <button
-            onClick={handleReset}
-            className="bg-gray-400 text-white px-6 py-2 rounded"
-          >
-            Reset
-          </button>
-          <button
-            onClick={handleSkip}
-            className="bg-blue-500 text-white px-6 py-2 rounded"
-          >
-            Skip
-          </button>
-        </div>
-        <label className="flex justify-between items-center">
-          BGM YouTube URL:
-          <input
-            type="text"
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-            className="border px-2 py-1 rounded w-60 text-sm dark:bg-gray-700 dark:border-gray-600"
-            placeholder="https://youtu.be/abc123..."
-          />
-        </label>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8 transition-all hover:shadow-xl">
+            <div className="text-7xl font-mono font-bold mb-8 bg-gradient-to-r from-red-500 to-orange-500 dark:from-red-400 dark:to-orange-400 bg-clip-text text-transparent">
+              {formatTime(seconds)}
+            </div>
 
-        {/* カスタム設定 */}
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-4 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4">タイマー設定</h2>
-          <div className="flex flex-col gap-4">
-            <label className="flex justify-between items-center">
-              作業時間（分）:
+            {/* タイマー操作 */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <button
+                onClick={handleStart}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+              >
+                Start
+              </button>
+              <button
+                onClick={handleStop}
+                className="bg-gradient-to-r from-red-500 to-rose-600 text-white px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+              >
+                Stop
+              </button>
+              <button
+                onClick={handleReset}
+                className="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+              >
+                Reset
+              </button>
+              <button
+                onClick={handleSkip}
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+              >
+                Skip
+              </button>
+            </div>
+          </div>
+
+          {/* <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 transition-all">
+            <label className="flex flex-col gap-2 mb-2">
+              <span className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                  />
+                </svg>
+                BGM YouTube URL:
+              </span>
               <input
-                type="number"
-                min={1}
-                value={workMinutes}
-                onChange={(e) => setWorkMinutes(Number(e.target.value))}
-                className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
+                type="text"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg w-full text-sm dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                placeholder="https://youtu.be/abc123..."
               />
             </label>
-            <label className="flex justify-between items-center">
-              休憩時間（分）:
-              <input
-                type="number"
-                min={1}
-                value={breakMinutes}
-                onChange={(e) => setBreakMinutes(Number(e.target.value))}
-                className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
-              />
-            </label>
-            <button
-              onClick={handleApplySettings}
-              className="bg-indigo-600 text-white py-2 rounded mt-2"
-            >
-              Apply
-            </button>
+          </div> */}
+
+          {/* カスタム設定 */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 w-full transition-all">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-orange-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                />
+              </svg>
+              タイマー設定
+            </h2>
+            <div className="flex flex-col gap-4">
+              <label className="flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                <span className="font-medium flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  作業時間（分）:
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  value={workMinutes}
+                  onChange={(e) => setWorkMinutes(Number(e.target.value))}
+                  className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg w-24 text-right dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                />
+              </label>
+              <label className="flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                <span className="font-medium flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-blue-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
+                  休憩時間（分）:
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  value={breakMinutes}
+                  onChange={(e) => setBreakMinutes(Number(e.target.value))}
+                  className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg w-24 text-right dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                />
+              </label>
+              <button
+                onClick={handleApplySettings}
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 mt-2"
+              >
+                Apply
+              </button>
+            </div>
           </div>
         </div>
       </main>
