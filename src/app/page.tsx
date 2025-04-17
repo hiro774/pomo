@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { BGMPlayer } from "@/components/BGMPlayer";
+import { AICommentBox } from "@/components/AICommentBox";
 
 export default function Home() {
   const { isDark, toggleTheme } = useTheme();
@@ -12,6 +13,25 @@ export default function Home() {
   const [seconds, setSeconds] = useState(workMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
+
+  const [aiMessage, setAiMessage] = useState("準備はいい？そろそろ始めるよ！");
+
+  useEffect(() => {
+    // セッション切り替え時のメッセージ更新
+    if (seconds === 0) {
+      setAiMessage(
+        isWorkSession
+          ? "お疲れさま！ちょっと休もう☕️"
+          : "休憩終了！次のセットいってみよっか！"
+      );
+    } else {
+      setAiMessage(
+        isWorkSession
+          ? "集中タイムだよ、見てるからね👀"
+          : "リラックスして〜、深呼吸〜"
+      );
+    }
+  }, [isWorkSession, seconds]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -138,7 +158,8 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <BGMPlayer videoId="LQiPO0bhB9o" />
+      <AICommentBox message={aiMessage} />
+      <BGMPlayer />
     </>
   );
 }
