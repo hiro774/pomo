@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTheme } from "../hooks/useTheme";
+import { BGMPlayer } from "@/components/BGMPlayer";
 
 export default function Home() {
   const { isDark, toggleTheme } = useTheme();
@@ -61,80 +62,83 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen text-center px-4 transition-colors bg-white text-black dark:bg-gray-900 dark:text-white">
-      <button
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 text-sm bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded"
-      >
-        {isDark ? "ライトモード" : "ダークモード"}
-      </button>
+    <>
+      <main className="flex flex-col items-center justify-center min-h-screen text-center px-4 transition-colors bg-white text-black dark:bg-gray-900 dark:text-white">
+        <button
+          onClick={toggleTheme}
+          className="absolute top-4 right-4 text-sm bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded"
+        >
+          {isDark ? "ライトモード" : "ダークモード"}
+        </button>
 
-      <h1 className="text-4xl font-bold mb-4">🍅 ポモドーロタイマー</h1>
-      <p className="mb-2 text-lg">
-        {isWorkSession ? "作業中 ⏳" : "休憩中 ☕️"}
-      </p>
-      <div className="text-6xl font-mono mb-6">{formatTime(seconds)}</div>
+        <h1 className="text-4xl font-bold mb-4">🍅 ポモドーロタイマー</h1>
+        <p className="mb-2 text-lg">
+          {isWorkSession ? "作業中 ⏳" : "休憩中 ☕️"}
+        </p>
+        <div className="text-6xl font-mono mb-6">{formatTime(seconds)}</div>
 
-      {/* タイマー操作 */}
-      <div className="flex gap-4 flex-wrap justify-center mb-6">
-        <button
-          onClick={handleStart}
-          className="bg-green-500 text-white px-6 py-2 rounded"
-        >
-          Start
-        </button>
-        <button
-          onClick={handleStop}
-          className="bg-red-500 text-white px-6 py-2 rounded"
-        >
-          Stop
-        </button>
-        <button
-          onClick={handleReset}
-          className="bg-gray-400 text-white px-6 py-2 rounded"
-        >
-          Reset
-        </button>
-        <button
-          onClick={handleSkip}
-          className="bg-blue-500 text-white px-6 py-2 rounded"
-        >
-          Skip
-        </button>
-      </div>
-
-      {/* カスタム設定 */}
-      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-4 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">タイマー設定</h2>
-        <div className="flex flex-col gap-4">
-          <label className="flex justify-between items-center">
-            作業時間（分）:
-            <input
-              type="number"
-              min={1}
-              value={workMinutes}
-              onChange={(e) => setWorkMinutes(Number(e.target.value))}
-              className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
-            />
-          </label>
-          <label className="flex justify-between items-center">
-            休憩時間（分）:
-            <input
-              type="number"
-              min={1}
-              value={breakMinutes}
-              onChange={(e) => setBreakMinutes(Number(e.target.value))}
-              className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
-            />
-          </label>
+        {/* タイマー操作 */}
+        <div className="flex gap-4 flex-wrap justify-center mb-6">
           <button
-            onClick={handleApplySettings}
-            className="bg-indigo-600 text-white py-2 rounded mt-2"
+            onClick={handleStart}
+            className="bg-green-500 text-white px-6 py-2 rounded"
           >
-            Apply
+            Start
+          </button>
+          <button
+            onClick={handleStop}
+            className="bg-red-500 text-white px-6 py-2 rounded"
+          >
+            Stop
+          </button>
+          <button
+            onClick={handleReset}
+            className="bg-gray-400 text-white px-6 py-2 rounded"
+          >
+            Reset
+          </button>
+          <button
+            onClick={handleSkip}
+            className="bg-blue-500 text-white px-6 py-2 rounded"
+          >
+            Skip
           </button>
         </div>
-      </div>
-    </main>
+
+        {/* カスタム設定 */}
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-4 w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-4">タイマー設定</h2>
+          <div className="flex flex-col gap-4">
+            <label className="flex justify-between items-center">
+              作業時間（分）:
+              <input
+                type="number"
+                min={1}
+                value={workMinutes}
+                onChange={(e) => setWorkMinutes(Number(e.target.value))}
+                className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
+              />
+            </label>
+            <label className="flex justify-between items-center">
+              休憩時間（分）:
+              <input
+                type="number"
+                min={1}
+                value={breakMinutes}
+                onChange={(e) => setBreakMinutes(Number(e.target.value))}
+                className="border px-2 py-1 rounded w-24 text-right dark:bg-gray-700 dark:border-gray-600"
+              />
+            </label>
+            <button
+              onClick={handleApplySettings}
+              className="bg-indigo-600 text-white py-2 rounded mt-2"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </main>
+      <BGMPlayer videoId="LQiPO0bhB9o" />
+    </>
   );
 }
