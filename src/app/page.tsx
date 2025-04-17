@@ -1,23 +1,64 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { BGMPlayer } from "@/components/BGMPlayer";
 import { AICommentBox } from "@/components/AICommentBox";
+import { useRouter } from "next/navigation";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { AuthButton } from "@/components/common/AuthButton";
 
 export default function Home() {
   const { isDark, toggleTheme } = useTheme();
+  const supabase = useSupabaseClient();
+  const session = useSession();
+  const router = useRouter();
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
-  const [seconds, setSeconds] = useState(workMinutes * 60);
+  const [volume, setVolume] = useState(30);
+  const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
-
   const [aiMessage, setAiMessage] = useState("準備はいい？そろそろ始めるよ！");
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // 🔐 未ログインならログインページへ
+  // useEffect(() => {
+  //   if (!session) {
+  //     router.push("/login");
+  //   }
+  // }, [session, router]);
+
+  // 📥 設定の読み込み
   useEffect(() => {
-    // セッション切り替え時のメッセージ更新
+    const fetchSettings = async () => {
+      if (!session) {
+        setIsLoaded(true); // ← これを追加！
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("settings")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      if (data) {
+        setWorkMinutes(data.work_minutes ?? 25);
+        setBreakMinutes(data.break_minutes ?? 5);
+        setVolume(data.volume ?? 30);
+        setSeconds((data.work_minutes ?? 25) * 60);
+      }
+
+      setIsLoaded(true); // ← ここも忘れずに
+    };
+
+    fetchSettings();
+  }, [session, supabase]);
+
+  // 🧠 メッセージ更新
+  useEffect(() => {
     if (seconds === 0) {
       setAiMessage(
         isWorkSession
@@ -33,6 +74,7 @@ export default function Home() {
     }
   }, [isWorkSession, seconds]);
 
+  // ⏱️ タイマー処理
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -75,14 +117,31 @@ export default function Home() {
     setSeconds(next ? workMinutes * 60 : breakMinutes * 60);
     setIsRunning(false);
   };
-  const handleApplySettings = () => {
+
+  // ✅ Apply時にSupabaseに保存
+  const handleApplySettings = async () => {
     const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
     setSeconds(newTime);
     setIsRunning(false);
+
+    if (!session) return;
+
+    await supabase.from("settings").upsert({
+      id: session.user.id,
+      work_minutes: workMinutes,
+      break_minutes: breakMinutes,
+      volume: volume,
+      updated_at: new Date().toISOString(),
+    });
   };
+
+  if (!isLoaded) {
+    return <main className="p-6">読み込み中...</main>;
+  }
 
   return (
     <>
+      <AuthButton />
       <main className="flex flex-col items-center justify-center min-h-screen text-center px-4 transition-colors bg-white text-black dark:bg-gray-900 dark:text-white">
         <button
           onClick={toggleTheme}
