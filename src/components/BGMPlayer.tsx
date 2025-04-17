@@ -1,7 +1,7 @@
 "use client";
 
 import YouTube from "react-youtube";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function extractVideoId(url: string): string | null {
   const youtubeRegex =
@@ -10,12 +10,16 @@ function extractVideoId(url: string): string | null {
   return match ? match[1] : null;
 }
 
-export const BGMPlayer = () => {
-  const [url, setUrl] = useState("");
+type BGMPlayerProps = {
+  videoUrl?: string; // ← 親から受け取る props
+};
+
+export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
+  const [url, setUrl] = useState(videoUrl); // ← 初期値として受け取る
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [width, setWidth] = useState(480);
-  const [height, setHeight] = useState(270);
+  const [width, setWidth] = useState(320);
+  const [height, setHeight] = useState(180);
   const [audioOnly, setAudioOnly] = useState(false);
   const [volume, setVolume] = useState(30);
   const playerRef = useRef<any>(null);
@@ -28,6 +32,17 @@ export const BGMPlayer = () => {
       controls: 1,
     },
   };
+
+  // 初期URLから videoId を抽出して再生準備
+  useEffect(() => {
+    if (videoUrl) {
+      const id = extractVideoId(videoUrl);
+      if (id) {
+        setVideoId(id);
+        setIsPlaying(true);
+      }
+    }
+  }, [videoUrl]);
 
   const onReady = (event: any) => {
     playerRef.current = event.target;

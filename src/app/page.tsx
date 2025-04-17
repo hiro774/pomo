@@ -3,16 +3,14 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { BGMPlayer } from "@/components/BGMPlayer";
-import { AICommentBox } from "@/components/AICommentBox";
-import { useRouter } from "next/navigation";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { AuthButton } from "@/components/common/AuthButton";
+import Link from "next/link";
 
 export default function Home() {
   const { isDark, toggleTheme } = useTheme();
   const supabase = useSupabaseClient();
   const session = useSession();
-  const router = useRouter();
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
@@ -20,8 +18,8 @@ export default function Home() {
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
-  const [aiMessage, setAiMessage] = useState("準備はいい？そろそろ始めるよ！");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(""); // ← 追加
 
   // 🔐 未ログインならログインページへ
   // useEffect(() => {
@@ -49,30 +47,14 @@ export default function Home() {
         setBreakMinutes(data.break_minutes ?? 5);
         setVolume(data.volume ?? 30);
         setSeconds((data.work_minutes ?? 25) * 60);
+        setVideoUrl(data.video_url ?? "");
       }
 
-      setIsLoaded(true); // ← ここも忘れずに
+      setIsLoaded(true); //
     };
 
     fetchSettings();
   }, [session, supabase]);
-
-  // 🧠 メッセージ更新
-  useEffect(() => {
-    if (seconds === 0) {
-      setAiMessage(
-        isWorkSession
-          ? "お疲れさま！ちょっと休もう☕️"
-          : "休憩終了！次のセットいってみよっか！"
-      );
-    } else {
-      setAiMessage(
-        isWorkSession
-          ? "集中タイムだよ、見てるからね👀"
-          : "リラックスして〜、深呼吸〜"
-      );
-    }
-  }, [isWorkSession, seconds]);
 
   // ⏱️ タイマー処理
   useEffect(() => {
@@ -131,6 +113,7 @@ export default function Home() {
       work_minutes: workMinutes,
       break_minutes: breakMinutes,
       volume: volume,
+      video_url: videoUrl,
       updated_at: new Date().toISOString(),
     });
   };
@@ -149,6 +132,20 @@ export default function Home() {
         >
           {isDark ? "ライトモード" : "ダークモード"}
         </button>
+        <div className="absolute top-20 left-4">
+          <Link
+            href="/settings"
+            className="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded text-black dark:text-white hover:underline"
+          >
+            設定画面へ
+          </Link>
+        </div>
+
+        {session?.user && (
+          <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
+            {session.user.email} さん
+          </p>
+        )}
 
         <h1 className="text-4xl font-bold mb-4">🍅 ポモドーロタイマー</h1>
         <p className="mb-2 text-lg">
@@ -183,6 +180,16 @@ export default function Home() {
             Skip
           </button>
         </div>
+        <label className="flex justify-between items-center">
+          BGM YouTube URL:
+          <input
+            type="text"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            className="border px-2 py-1 rounded w-60 text-sm dark:bg-gray-700 dark:border-gray-600"
+            placeholder="https://youtu.be/abc123..."
+          />
+        </label>
 
         {/* カスタム設定 */}
         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-4 w-full max-w-md">
@@ -217,8 +224,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <AICommentBox message={aiMessage} />
-      <BGMPlayer />
+      <BGMPlayer videoUrl={videoUrl} />
     </>
   );
 }
