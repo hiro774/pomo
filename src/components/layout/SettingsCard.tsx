@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import SettingsModal from "../features/SettingsModal";
 
 interface SettingsCardProps {
   workMinutes: number;
   setWorkMinutes: (value: number) => void;
   breakMinutes: number;
   setBreakMinutes: (value: number) => void;
-  handleApplySettings: () => void;
 }
 
 const SettingsCard: React.FC<SettingsCardProps> = ({
@@ -13,12 +13,28 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
   setWorkMinutes,
   breakMinutes,
   setBreakMinutes,
-  handleApplySettings,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return (
     <div>
+      {/* モーダル */}
+      <SettingsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        workMinutes={workMinutes}
+        setWorkMinutes={setWorkMinutes}
+        breakMinutes={breakMinutes}
+        setBreakMinutes={setBreakMinutes}
+      />
+
       {/* カスタム設定 */}
-      <div className="card p-6 w-full transition-all duration-300 hover:shadow-soft-lg">
+      <div
+        className="card p-6 w-full transition-all duration-300 hover:shadow-soft-lg cursor-pointer"
+        onClick={openModal}
+      >
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 gradient-text from-secondary-500 to-accent-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +76,10 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               min={1}
               max={120}
               value={workMinutes}
-              onChange={(e) => setWorkMinutes(Number(e.target.value))}
+              onChange={(e) => {
+                setWorkMinutes(Number(e.target.value));
+              }}
+              onClick={(e) => e.stopPropagation()}
               className="input-field w-24 text-right"
             />
           </label>
@@ -88,31 +107,11 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               max={60}
               value={breakMinutes}
               onChange={(e) => setBreakMinutes(Number(e.target.value))}
+              onClick={(e) => e.stopPropagation()}
               className="input-field w-24 text-right"
             />
           </label>
-          <button
-            onClick={handleApplySettings}
-            className="btn btn-primary bg-gradient-to-r from-secondary-500 to-accent-500 mt-2 py-3"
-          >
-            <span className="flex items-center justify-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              設定を適用
-            </span>
-          </button>
+          {/* 設定を適用ボタンは削除 - 設定変更時に自動的に反映されるようになりました */}
         </div>
       </div>
     </div>
