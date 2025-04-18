@@ -11,6 +11,8 @@ interface SettingsModalProps {
   setWorkMinutes: (value: number) => void;
   breakMinutes: number;
   setBreakMinutes: (value: number) => void;
+  videoUrl: string;
+  setVideoUrl: (value: string) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -20,13 +22,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setWorkMinutes,
   breakMinutes,
   setBreakMinutes,
+  videoUrl,
+  setVideoUrl,
 }) => {
   const session = useSession();
   const supabase = useSupabaseClient();
 
   const [localWorkMinutes, setLocalWorkMinutes] = useState(workMinutes);
   const [localBreakMinutes, setLocalBreakMinutes] = useState(breakMinutes);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [localVideoUrl, setLocalVideoUrl] = useState(videoUrl);
+  // const [videoUrl, setVideoUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
   // 設定の読み込み
@@ -46,7 +51,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       if (data) {
         setLocalWorkMinutes(data.work_minutes ?? workMinutes);
         setLocalBreakMinutes(data.break_minutes ?? breakMinutes);
-        setVideoUrl(data.video_url ?? "");
+        setLocalVideoUrl(data.video_url ?? "");
       }
 
       setIsLoaded(true);
@@ -55,14 +60,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     if (isOpen) {
       setLocalWorkMinutes(workMinutes);
       setLocalBreakMinutes(breakMinutes);
+      setLocalVideoUrl(videoUrl);
       fetchSettings();
     }
-  }, [isOpen, session, supabase, workMinutes, breakMinutes]);
+  }, [isOpen, session, supabase, workMinutes, breakMinutes, videoUrl]);
 
   const handleSave = async () => {
     // 親コンポーネントの状態を更新
     setWorkMinutes(localWorkMinutes);
     setBreakMinutes(localBreakMinutes);
+    setVideoUrl(localVideoUrl);
 
     // Supabaseに保存（ログインしている場合）
     if (session) {
@@ -70,7 +77,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         id: session.user.id,
         work_minutes: localWorkMinutes,
         break_minutes: localBreakMinutes,
-        video_url: videoUrl,
+        video_url: localVideoUrl,
         updated_at: new Date().toISOString(),
       });
 
@@ -209,8 +216,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </span>
             <input
               type="text"
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
+              value={localVideoUrl}
+              onChange={(e) => setLocalVideoUrl(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
               placeholder="https://youtu.be/abc123..."
             />

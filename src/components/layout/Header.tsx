@@ -14,6 +14,8 @@ interface HeaderProps {
   setWorkMinutes: (value: number) => void;
   breakMinutes: number;
   setBreakMinutes: (value: number) => void;
+  videoUrl: string;
+  setVideoUrl: (value: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -24,6 +26,8 @@ const Header: React.FC<HeaderProps> = ({
   setWorkMinutes,
   breakMinutes,
   setBreakMinutes,
+  videoUrl,
+  setVideoUrl,
 }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -39,6 +43,8 @@ const Header: React.FC<HeaderProps> = ({
         setWorkMinutes={setWorkMinutes}
         breakMinutes={breakMinutes}
         setBreakMinutes={setBreakMinutes}
+        videoUrl={videoUrl}
+        setVideoUrl={setVideoUrl}
       />
 
       {/* ヘッダーナビゲーション */}

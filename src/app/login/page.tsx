@@ -13,7 +13,7 @@ export default function LoginPage() {
     if (session) {
       router.push("/"); // ログイン済みならトップへ
     }
-  }, [session]);
+  }, [session, router]);
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({

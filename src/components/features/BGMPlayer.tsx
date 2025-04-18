@@ -52,7 +52,7 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
       const id = extractVideoId(videoUrl);
       if (id) {
         setVideoId(id);
-        // setIsPlaying(true);
+        setIsPlaying(false);
       }
     }
   }, [videoUrl]);
@@ -203,7 +203,7 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
             <div className="flex gap-2">
               <input
                 type="text"
-                value={url}
+                value={videoUrl}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://youtu.be/abc123..."
                 className="input-field text-sm flex-1"

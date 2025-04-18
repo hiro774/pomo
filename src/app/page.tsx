@@ -16,15 +16,14 @@ export default function Home() {
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
-  // const [volume, setVolume] = useState(30);
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
-  const [progress, setProgress] = useState(100); // 進捗バーの状態を追加
+  const [progress, setProgress] = useState(100);
 
-  // 📥 設定の読み込み
+  // 設定の読み込み
   useEffect(() => {
     const fetchSettings = async () => {
       if (!session) {
@@ -52,7 +51,7 @@ export default function Home() {
     fetchSettings();
   }, [session, supabase]);
 
-  // ⏱️ タイマー処理
+  // タイマー処理
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -131,22 +130,6 @@ export default function Home() {
     setIsRunning(false);
   };
 
-  // ✅ 設定の保存（将来的にSupabaseへの保存機能を実装する可能性があるため残しておく）
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleApplySettings = async () => {
-    setIsRunning(false);
-
-    // if (!session) return;
-
-    // await supabase.from("settings").upsert({
-    //   id: session.user.id,
-    //   work_minutes: workMinutes,
-    //   break_minutes: breakMinutes,
-    //   volume: volume,
-    //   updated_at: new Date().toISOString(),
-    // });
-  };
-
   if (!isLoaded) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-light-100 dark:bg-dark-200">
@@ -174,6 +157,8 @@ export default function Home() {
         setWorkMinutes={setWorkMinutes}
         breakMinutes={breakMinutes}
         setBreakMinutes={setBreakMinutes}
+        videoUrl={videoUrl}
+        setVideoUrl={setVideoUrl}
       />
       {/* メインコンテンツ */}
       <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-b from-light-100 to-light-300 dark:from-dark-200 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
