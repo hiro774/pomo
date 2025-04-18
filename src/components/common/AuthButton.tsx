@@ -25,7 +25,7 @@ export const AuthButton = () => {
     setIsLoading(true);
     try {
       await supabase.auth.signOut();
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       console.error("ログアウトエラー:", error);
     } finally {
