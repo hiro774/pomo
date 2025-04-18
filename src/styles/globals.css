@@ -57,6 +57,22 @@
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r animate-gradient bg-[length:200%_auto];
   }
+
+  /* 影のスタイル */
+  .shadow-glow-primary {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5),
+      0 0 5px rgba(56, 189, 248, 0.3);
+  }
+
+  .shadow-glow-secondary {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.5),
+      0 0 5px rgba(249, 115, 22, 0.3);
+  }
+
+  .shadow-glow-accent {
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.5),
+      0 0 5px rgba(217, 70, 239, 0.3);
+  }
 }
 
 /* カスタムスクロールバー */

@@ -67,28 +67,38 @@ export default function Home() {
         setVideoUrl={setVideoUrl}
       />
       {/* メインコンテンツ */}
-      <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-b from-light-100 to-light-300 dark:from-dark-200 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto animate-slide-up">
-          <SessionStatus isWorkSession={isWorkSession} />
+      <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-br from-light-100 via-light-200 to-light-300 dark:from-dark-200 dark:via-dark-100 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+        <div className="w-full max-w-md sm:max-w-lg md:max-w-xl mx-auto animate-slide-up">
+          <div className="relative">
+            {/* 背景の装飾要素 */}
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-br from-primary-300/20 to-primary-500/20 dark:from-primary-500/10 dark:to-primary-700/10 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-20 -right-10 w-60 h-60 bg-gradient-to-tr from-secondary-300/20 to-secondary-500/20 dark:from-secondary-500/10 dark:to-secondary-700/10 rounded-full blur-3xl"></div>
 
-          <TimerCard
-            isWorkSession={isWorkSession}
-            progress={progress}
-            formatTime={formatTime}
-            seconds={seconds}
-            handleStart={handleStart}
-            isRunning={isRunning}
-            handleStop={handleStop}
-            handleReset={handleReset}
-            handleSkip={handleSkip}
-          />
-          <div className="mb-[100px]">
-            <SettingsCard
-              workMinutes={workMinutes}
-              setWorkMinutes={setWorkMinutes}
-              breakMinutes={breakMinutes}
-              setBreakMinutes={setBreakMinutes}
+            {/* セッションステータス */}
+            <SessionStatus isWorkSession={isWorkSession} />
+
+            {/* タイマーカード */}
+            <TimerCard
+              isWorkSession={isWorkSession}
+              progress={progress}
+              formatTime={formatTime}
+              seconds={seconds}
+              handleStart={handleStart}
+              isRunning={isRunning}
+              handleStop={handleStop}
+              handleReset={handleReset}
+              handleSkip={handleSkip}
             />
+
+            {/* 設定カード */}
+            <div className="mb-[100px] mt-8">
+              <SettingsCard
+                workMinutes={workMinutes}
+                setWorkMinutes={setWorkMinutes}
+                breakMinutes={breakMinutes}
+                setBreakMinutes={setBreakMinutes}
+              />
+            </div>
           </div>
         </div>
       </main>
