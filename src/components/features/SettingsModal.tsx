@@ -36,8 +36,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   // 設定の読み込み
   useEffect(() => {
     const fetchSettings = async () => {
+      // ローディング開始時間を記録
+      const startTime = Date.now();
+
       if (!session) {
-        setIsLoaded(true);
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, 500 - elapsedTime);
+
+        setTimeout(() => {
+          setIsLoaded(true);
+        }, remainingTime);
         return;
       }
 
@@ -53,10 +61,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         setLocalVideoUrl(data.video_url ?? "");
       }
 
-      setIsLoaded(true);
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 500 - elapsedTime);
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, remainingTime);
     };
 
     if (isOpen) {
+      setIsLoaded(false); // モーダルが開かれるたびにローディング状態にリセット
       setLocalWorkMinutes(workMinutes);
       setLocalBreakMinutes(breakMinutes);
       setLocalVideoUrl(videoUrl);
@@ -92,10 +105,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   if (!isLoaded && isOpen) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="設定">
+      <Modal isOpen={isOpen} onClose={onClose}>
         <div className="flex justify-center items-center h-40">
           <div className="animate-pulse-slow flex flex-col items-center">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary-400 to-secondary-400 animate-spin opacity-70"></div>
+            <div className="h-16 w-16 rounded-full bg-gradient-to-r from-primary-400 to-secondary-400 animate-spin opacity-70"></div>
             <p className="mt-4 text-sm font-medium text-gray-600 dark:text-gray-300">
               読み込み中...
             </p>
