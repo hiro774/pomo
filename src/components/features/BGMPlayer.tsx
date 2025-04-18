@@ -26,8 +26,8 @@ type BGMPlayerProps = {
   videoUrl?: string;
 };
 
-export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
-  const [url, setUrl] = useState(videoUrl);
+export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
+  const [url, setUrl] = useState(videoUrl ?? "");
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(30);
@@ -45,6 +45,11 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
       controls: 1,
     },
   };
+
+  // videoUrlが変更されたらurlも更新
+  useEffect(() => {
+    setUrl(videoUrl ?? "");
+  }, [videoUrl]);
 
   // 初期URLから videoId を抽出して再生準備
   useEffect(() => {
@@ -203,8 +208,8 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
             <div className="flex gap-2">
               <input
                 type="text"
-                value={videoUrl}
-                onChange={(e) => setUrl(e.target.value)}
+                value={url}
+                onChange={(e) => setUrl(String(e.target.value))}
                 placeholder="https://youtu.be/abc123..."
                 className="input-field text-sm flex-1"
               />

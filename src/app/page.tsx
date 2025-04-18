@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { BGMPlayer } from "@/components/features/BGMPlayer";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -16,6 +16,8 @@ export default function Home() {
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [duration, setDuration] = useState(workMinutes * 60);
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
@@ -23,13 +25,32 @@ export default function Home() {
   const [videoUrl, setVideoUrl] = useState("");
   const [progress, setProgress] = useState(100);
 
-  // 設定の読み込み
+  const isRunningRef = useRef(isRunning);
+  const settingsLoadedRef = useRef(false);
+
   useEffect(() => {
+    // タブの可視性変更を監視
+    const handleVisibilityChange = () => {
+      // タブが表示状態に変わった時は何もしない（設定のリセットを防止）
+      if (document.visibilityState === "visible") {
+        console.log("タブがアクティブになりました");
+      }
+    };
+
+    // visibilitychangeイベントリスナーを追加
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     const fetchSettings = async () => {
+      // すでに設定を読み込んでいる場合は再読み込みしない
+      if (settingsLoadedRef.current) {
+        return;
+      }
+
       if (!session) {
         setIsLoaded(true);
         return;
       }
+      console.log("設定が読み込まれたよ");
 
       const { data } = await supabase
         .from("settings")
@@ -40,47 +61,56 @@ export default function Home() {
       if (data) {
         setWorkMinutes(data.work_minutes ?? 25);
         setBreakMinutes(data.break_minutes ?? 5);
-        // setVolume(data.volume ?? 30);
         setSeconds((data.work_minutes ?? 25) * 60);
         setVideoUrl(data.video_url ?? "");
       }
 
       setIsLoaded(true);
+      settingsLoadedRef.current = true;
     };
 
     fetchSettings();
+
+    // クリーンアップ関数
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [session, supabase]);
 
   // タイマー処理
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (isRunning && seconds > 0) {
+    if (isRunning && startTime !== null) {
       timer = setInterval(() => {
-        setSeconds((prev) => prev - 1);
+        const now = Date.now();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        const remaining = Math.max(duration - elapsed, 0);
+        setSeconds(remaining);
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+
+          const next = !isWorkSession;
+          setIsWorkSession(next);
+
+          const nextDuration = next ? workMinutes * 60 : breakMinutes * 60;
+          setDuration(nextDuration);
+          setStartTime(Date.now());
+          setIsRunning(true);
+        }
       }, 1000);
     }
 
-    if (isRunning && seconds === 0) {
-      setIsRunning(false);
-      const next = !isWorkSession;
-      setIsWorkSession(next);
-      setSeconds(next ? workMinutes * 60 : breakMinutes * 60);
-      setIsRunning(true);
-
-      // 通知を表示
-      if (Notification.permission === "granted") {
-        new Notification(next ? "作業時間開始" : "休憩時間開始", {
-          body: next
-            ? `${workMinutes}分の作業を始めましょう`
-            : `${breakMinutes}分の休憩をお楽しみください`,
-          icon: "/vercel.svg",
-        });
-      }
-    }
-
     return () => clearInterval(timer);
-  }, [isRunning, seconds, isWorkSession, workMinutes, breakMinutes]);
+  }, [
+    isRunning,
+    startTime,
+    duration,
+    isWorkSession,
+    workMinutes,
+    breakMinutes,
+  ]);
 
   // 進捗バーの更新
   useEffect(() => {
@@ -89,13 +119,17 @@ export default function Home() {
     setProgress(percentage);
   }, [seconds, isWorkSession, workMinutes, breakMinutes]);
 
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
   // 作業時間または休憩時間が変更されたときにタイマーを更新
-  // useEffect(() => {
-  //   if (!isRunning) {
-  //     const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
-  //     setSeconds(newTime);
-  //   }
-  // }, [workMinutes, breakMinutes, isWorkSession, isRunning]);
+  useEffect(() => {
+    if (!isRunningRef.current) {
+      const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
+      setSeconds(newTime);
+    }
+  }, [workMinutes, breakMinutes, isWorkSession]);
 
   // 通知許可の確認
   useEffect(() => {
@@ -116,7 +150,11 @@ export default function Home() {
     )}`;
   };
 
-  const handleStart = () => setIsRunning(true);
+  const handleStart = () => {
+    setStartTime(Date.now());
+    setDuration(isWorkSession ? workMinutes * 60 : breakMinutes * 60);
+    setIsRunning(true);
+  };
   const handleStop = () => setIsRunning(false);
   const handleReset = () => {
     if (isWorkSession) {
