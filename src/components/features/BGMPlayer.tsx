@@ -1,6 +1,6 @@
 "use client";
 
-import YouTube from "react-youtube";
+import YouTube, { YouTubePlayer } from "react-youtube";
 import { useState, useEffect, useRef } from "react";
 
 function extractVideoId(url: string): string | null {
@@ -23,7 +23,7 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
   const [audioOnly, setAudioOnly] = useState(false);
   const [volume, setVolume] = useState(30);
   const [isExpanded, setIsExpanded] = useState(false);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
 
   const opts = {
     width: audioOnly ? "0" : String(width),
@@ -45,7 +45,7 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
     }
   }, [videoUrl]);
 
-  const onReady = (event: any) => {
+  const onReady = (event: { target: YouTubePlayer }) => {
     playerRef.current = event.target;
     event.target.setVolume(volume);
     if (!isPlaying) {
@@ -58,7 +58,11 @@ export const BGMPlayer = ({ videoUrl = "" }: BGMPlayerProps) => {
       const next = !prev;
       const player = playerRef.current;
       if (player) {
-        next ? player.playVideo() : player.pauseVideo();
+        if (next) {
+          player.playVideo();
+        } else {
+          player.pauseVideo();
+        }
       }
       return next;
     });
