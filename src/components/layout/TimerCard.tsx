@@ -49,12 +49,12 @@ const TimerCard: React.FC<TimerCardProps> = ({
         </div>
 
         {/* タイマー表示 */}
-        <div className="text-7xl font-mono font-bold mb-8 gradient-text from-secondary-500 to-accent-500 dark:from-secondary-400 dark:to-accent-400">
+        <div className="text-5xl sm:text-6xl md:text-7xl font-mono font-bold mb-8 gradient-text from-secondary-500 to-accent-500 dark:from-secondary-400 dark:to-accent-400">
           {formatTime(seconds)}
         </div>
 
         {/* タイマー操作ボタン */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
           <button
             onClick={handleStart}
             className="btn btn-primary bg-gradient-to-r from-primary-500 to-primary-600"

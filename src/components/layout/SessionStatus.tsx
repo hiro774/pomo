@@ -10,7 +10,7 @@ const SessionStatus = ({ isWorkSession }: SessionStatusProps) => {
       {/* セッションステータス */}
       <div className="mb-8 flex justify-center">
         <div className="inline-block bg-white/90 dark:bg-dark-100/90 backdrop-blur-md px-5 py-2 rounded-full shadow-soft">
-          <p className="text-lg font-medium flex items-center gap-2">
+          <p className="text-lg md:text-2xl font-medium flex items-center gap-2">
             {isWorkSession ? (
               <>
                 <span className="inline-block w-3 h-3 bg-secondary-500 rounded-full animate-pulse"></span>

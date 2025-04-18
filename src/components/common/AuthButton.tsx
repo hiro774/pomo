@@ -38,7 +38,7 @@ export const AuthButton = () => {
       <button
         onClick={handleLogout}
         disabled={isLoading}
-        className="btn-outline text-sm px-4 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 border border-transparent hover:border-red-200 dark:hover:border-red-800"
+        className="btn-outline text-sm md:text-base px-4 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 border border-transparent hover:border-red-200 dark:hover:border-red-800"
         aria-label="ログアウト"
       >
         {isLoading ? (

@@ -34,12 +34,37 @@ export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const playerRef = useRef<YouTubePlayer | null>(null);
 
-  const width = 320;
-  const height = 180;
+  // レスポンシブ対応のためのサイズ設定
+  const getPlayerSize = () => {
+    // 画面幅に応じてプレイヤーサイズを調整
+    if (typeof window !== "undefined") {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 480) {
+        // モバイル（小）
+        return { width: "100%", height: 120 };
+      } else if (screenWidth < 640) {
+        // モバイル（大）
+        return { width: "100%", height: 150 };
+      }
+    }
+    return { width: 320, height: 180 }; // デスクトップサイズ
+  };
+
+  const [playerSize, setPlayerSize] = useState(getPlayerSize());
+
+  // 画面サイズ変更時にプレイヤーサイズを更新
+  useEffect(() => {
+    const handleResize = () => {
+      setPlayerSize(getPlayerSize());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const opts = {
-    width: String(width),
-    height: String(height),
+    width: String(playerSize.width),
+    height: String(playerSize.height),
     playerVars: {
       autoplay: 0,
       controls: 1,
@@ -120,9 +145,9 @@ export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
 
   return (
     <div
-      className={`fixed bottom-4 left-4 z-30 bg-white/95 dark:bg-dark-100/95 backdrop-blur-md text-gray-800 dark:text-gray-100 rounded-2xl shadow-soft hover:shadow-soft-lg transition-all duration-300 max-w-md ${
-        isExpanded ? "w-full sm:w-96" : "w-auto"
-      }`}
+      className={`fixed z-30 bg-white/95 dark:bg-dark-100/95 backdrop-blur-md text-gray-800 dark:text-gray-100 shadow-soft hover:shadow-soft-lg transition-all duration-300 
+        ${isExpanded ? "w-full sm:w-96" : "w-auto sm:w-auto"}
+        bottom-0 left-0 right-0 sm:bottom-4 sm:left-4 sm:right-auto rounded-t-xl sm:rounded-xl`}
     >
       {/* ヘッダー部分 */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
@@ -314,14 +339,19 @@ export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
         </div>
 
         {/* 動画プレイヤー（音声のみ時は非表示） */}
-        <div className="relative">
-          <div>
+        <div className="relative overflow-hidden">
+          <div
+            className={`${
+              typeof playerSize.width === "string" ? "w-full" : ""
+            }`}
+          >
             {videoId && (
               <YouTube
                 videoId={videoId}
                 opts={opts}
                 onReady={onReady}
                 onStateChange={onStateChange}
+                className="w-full"
               />
             )}
           </div>
@@ -330,7 +360,7 @@ export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
 
       {/* 最小化時のミニコントロール */}
       {!isExpanded && videoId && (
-        <div className="px-4 py-2 flex items-center gap-3">
+        <div className="px-4 py-2 flex items-center gap-3 justify-between sm:justify-start border-t border-gray-100 dark:border-gray-800">
           <button
             onClick={togglePlay}
             className="p-1.5 rounded-full bg-gray-100 dark:bg-dark-200 hover:bg-gray-200 dark:hover:bg-dark-300 transition-colors"
@@ -375,16 +405,16 @@ export const BGMPlayer = ({ videoUrl }: BGMPlayerProps) => {
             )}
           </button>
 
-          <div className="flex-1 flex items-center gap-2">
+          <div className="flex-1 flex items-center gap-2 max-w-[200px] sm:max-w-none">
             <input
               type="range"
               min="0"
               max="100"
               value={volume}
               onChange={handleVolumeChange}
-              className="w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full appearance-none cursor-pointer accent-secondary-500"
+              className="w-full sm:w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full appearance-none cursor-pointer accent-secondary-500"
             />
-            <span className="text-xs">{volume}</span>
+            <span className="text-xs whitespace-nowrap">{volume}</span>
           </div>
         </div>
       )}

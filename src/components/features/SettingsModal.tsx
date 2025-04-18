@@ -31,7 +31,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [localWorkMinutes, setLocalWorkMinutes] = useState(workMinutes);
   const [localBreakMinutes, setLocalBreakMinutes] = useState(breakMinutes);
   const [localVideoUrl, setLocalVideoUrl] = useState(videoUrl);
-  // const [videoUrl, setVideoUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
   // 設定の読み込み
@@ -132,14 +131,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          ポモドーロ設定
+          基本設定
         </div>
       }
     >
       <div className="flex flex-col gap-5">
         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
           <label className="flex flex-col gap-2">
-            <span className="font-medium flex items-center gap-1">
+            <span className="font-medium flex items-center gap-1 text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 text-red-500"
@@ -168,7 +167,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
           <label className="flex flex-col gap-2">
-            <span className="font-medium flex items-center gap-1">
+            <span className="font-medium flex items-center gap-1 text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 text-blue-500"
@@ -197,7 +196,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
           <label className="flex flex-col gap-2">
-            <span className="font-medium flex items-center gap-1">
+            <span className="font-medium flex items-center gap-1 text-sm sm:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 text-purple-500"
