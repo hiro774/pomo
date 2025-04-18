@@ -21,11 +21,19 @@ const useSettings = () => {
         return;
       }
 
+      // ローディング開始時間を記録
+      const startTime = Date.now();
+
       if (!session) {
-        setIsLoaded(true);
+        // 最低1秒間のローディングを確保
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, 500 - elapsedTime);
+
+        setTimeout(() => {
+          setIsLoaded(true);
+        }, remainingTime);
         return;
       }
-      console.log("設定が読み込まれたよ");
 
       const { data } = await supabase
         .from("settings")
@@ -39,7 +47,10 @@ const useSettings = () => {
         setVideoUrl(data.video_url ?? "");
       }
 
-      setIsLoaded(true);
+      const elapsed = Date.now() - startTime;
+      const wait = Math.max(0, 500 - elapsed);
+      setTimeout(() => setIsLoaded(true), wait);
+
       settingsLoadedRef.current = true;
     };
 
