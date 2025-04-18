@@ -1,178 +1,40 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "../hooks/useTheme";
 import { BGMPlayer } from "@/components/features/BGMPlayer";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Header from "@/components/layout/Header";
 import TimerCard from "@/components/layout/TimerCard";
 import SessionStatus from "@/components/layout/SessionStatus";
 import SettingsCard from "@/components/layout/SettingsCard";
+import useSettings from "@/hooks/useSettings";
+import usePomodoro from "@/hooks/usePomodoro";
 
 export default function Home() {
-  const { isDark, toggleTheme } = useTheme();
-  const supabase = useSupabaseClient();
-  const session = useSession();
-
-  const [workMinutes, setWorkMinutes] = useState(25);
-  const [breakMinutes, setBreakMinutes] = useState(5);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [duration, setDuration] = useState(workMinutes * 60);
-  const [seconds, setSeconds] = useState(25 * 60);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isWorkSession, setIsWorkSession] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState("");
-  const [progress, setProgress] = useState(100);
-
-  const isRunningRef = useRef(isRunning);
-  const settingsLoadedRef = useRef(false);
-
-  useEffect(() => {
-    // タブの可視性変更を監視
-    const handleVisibilityChange = () => {
-      // タブが表示状態に変わった時は何もしない（設定のリセットを防止）
-      if (document.visibilityState === "visible") {
-        console.log("タブがアクティブになりました");
-      }
-    };
-
-    // visibilitychangeイベントリスナーを追加
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    const fetchSettings = async () => {
-      // すでに設定を読み込んでいる場合は再読み込みしない
-      if (settingsLoadedRef.current) {
-        return;
-      }
-
-      if (!session) {
-        setIsLoaded(true);
-        return;
-      }
-      console.log("設定が読み込まれたよ");
-
-      const { data } = await supabase
-        .from("settings")
-        .select("*")
-        .eq("id", session.user.id)
-        .single();
-
-      if (data) {
-        setWorkMinutes(data.work_minutes ?? 25);
-        setBreakMinutes(data.break_minutes ?? 5);
-        setSeconds((data.work_minutes ?? 25) * 60);
-        setVideoUrl(data.video_url ?? "");
-      }
-
-      setIsLoaded(true);
-      settingsLoadedRef.current = true;
-    };
-
-    fetchSettings();
-
-    // クリーンアップ関数
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [session, supabase]);
-
-  // タイマー処理
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (isRunning && startTime !== null) {
-      timer = setInterval(() => {
-        const now = Date.now();
-        const elapsed = Math.floor((now - startTime) / 1000);
-        const remaining = Math.max(duration - elapsed, 0);
-        setSeconds(remaining);
-
-        if (remaining <= 0) {
-          clearInterval(timer);
-
-          const next = !isWorkSession;
-          setIsWorkSession(next);
-
-          const nextDuration = next ? workMinutes * 60 : breakMinutes * 60;
-          setDuration(nextDuration);
-          setStartTime(Date.now());
-          setIsRunning(true);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(timer);
-  }, [
-    isRunning,
-    startTime,
-    duration,
-    isWorkSession,
+  // 設定関連のフックを使用
+  const {
     workMinutes,
+    setWorkMinutes,
     breakMinutes,
-  ]);
+    setBreakMinutes,
+    videoUrl,
+    setVideoUrl,
+    isLoaded,
+    isDark,
+    toggleTheme,
+    session,
+  } = useSettings();
 
-  // 進捗バーの更新
-  useEffect(() => {
-    const totalSeconds = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
-    const percentage = (seconds / totalSeconds) * 100;
-    setProgress(percentage);
-  }, [seconds, isWorkSession, workMinutes, breakMinutes]);
-
-  useEffect(() => {
-    isRunningRef.current = isRunning;
-  }, [isRunning]);
-
-  // 作業時間または休憩時間が変更されたときにタイマーを更新
-  useEffect(() => {
-    if (!isRunningRef.current) {
-      const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
-      setSeconds(newTime);
-    }
-  }, [workMinutes, breakMinutes, isWorkSession]);
-
-  // 通知許可の確認
-  useEffect(() => {
-    if (
-      Notification.permission !== "granted" &&
-      Notification.permission !== "denied"
-    ) {
-      Notification.requestPermission();
-    }
-  }, []);
-
-  const formatTime = (sec: number) => {
-    const minutes = Math.floor(sec / 60);
-    const seconds = sec % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0"
-    )}`;
-  };
-
-  const handleStart = () => {
-    setStartTime(Date.now());
-    setDuration(isWorkSession ? workMinutes * 60 : breakMinutes * 60);
-    setIsRunning(true);
-  };
-  const handleStop = () => setIsRunning(false);
-  const handleReset = () => {
-    if (isWorkSession) {
-      setIsRunning(false);
-      setIsWorkSession(true);
-      setSeconds(workMinutes * 60);
-    } else {
-      setIsRunning(false);
-      setIsWorkSession(false);
-      setSeconds(breakMinutes * 60);
-    }
-  };
-  const handleSkip = () => {
-    const next = !isWorkSession;
-    setIsWorkSession(next);
-    setSeconds(next ? workMinutes * 60 : breakMinutes * 60);
-    setIsRunning(false);
-  };
+  // タイマー関連のフックを使用
+  const {
+    seconds,
+    isRunning,
+    isWorkSession,
+    handleStart,
+    handleStop,
+    handleReset,
+    handleSkip,
+    formatTime,
+    progress,
+  } = usePomodoro({ workMinutes, breakMinutes });
 
   if (!isLoaded) {
     return (
