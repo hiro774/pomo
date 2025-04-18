@@ -1,7 +1,7 @@
 // hooks/useTheme.ts
 import { useEffect, useState } from "react";
 
-export const useTheme = () => {
+const useTheme = () => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -19,3 +19,5 @@ export const useTheme = () => {
 
   return { isDark, toggleTheme };
 };
+
+export default useTheme;
