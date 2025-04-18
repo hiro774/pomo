@@ -90,12 +90,12 @@ export default function Home() {
   }, [seconds, isWorkSession, workMinutes, breakMinutes]);
 
   // 作業時間または休憩時間が変更されたときにタイマーを更新
-  useEffect(() => {
-    if (!isRunning) {
-      const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
-      setSeconds(newTime);
-    }
-  }, [workMinutes, breakMinutes, isWorkSession, isRunning]);
+  // useEffect(() => {
+  //   if (!isRunning) {
+  //     const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
+  //     setSeconds(newTime);
+  //   }
+  // }, [workMinutes, breakMinutes, isWorkSession, isRunning]);
 
   // 通知許可の確認
   useEffect(() => {
@@ -119,9 +119,15 @@ export default function Home() {
   const handleStart = () => setIsRunning(true);
   const handleStop = () => setIsRunning(false);
   const handleReset = () => {
-    setIsRunning(false);
-    setIsWorkSession(true);
-    setSeconds(workMinutes * 60);
+    if (isWorkSession) {
+      setIsRunning(false);
+      setIsWorkSession(true);
+      setSeconds(workMinutes * 60);
+    } else {
+      setIsRunning(false);
+      setIsWorkSession(false);
+      setSeconds(breakMinutes * 60);
+    }
   };
   const handleSkip = () => {
     const next = !isWorkSession;
