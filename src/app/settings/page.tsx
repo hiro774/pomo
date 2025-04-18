@@ -11,7 +11,7 @@ export default function SettingsPage() {
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
-  const [volume, setVolume] = useState(30);
+  // const [volume, setVolume] = useState(30);
   const [videoUrl, setVideoUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -28,7 +28,7 @@ export default function SettingsPage() {
       if (data) {
         setWorkMinutes(data.work_minutes ?? 25);
         setBreakMinutes(data.break_minutes ?? 5);
-        setVolume(data.volume ?? 30);
+        // setVolume(data.volume ?? 30);
         setVideoUrl(data.video_url ?? "");
       }
 
@@ -45,7 +45,7 @@ export default function SettingsPage() {
       id: session.user.id,
       work_minutes: workMinutes,
       break_minutes: breakMinutes,
-      volume: volume,
+      // volume: volume,
       video_url: videoUrl,
       updated_at: new Date().toISOString(),
     });
@@ -168,7 +168,7 @@ export default function SettingsPage() {
               </label>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+            {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <label className="flex flex-col gap-2">
                 <span className="font-medium flex items-center gap-1">
                   <svg
@@ -201,7 +201,7 @@ export default function SettingsPage() {
                   </span>
                 </div>
               </label>
-            </div>
+            </div> */}
 
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <label className="flex flex-col gap-2">

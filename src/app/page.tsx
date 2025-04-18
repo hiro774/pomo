@@ -16,7 +16,7 @@ export default function Home() {
 
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
-  const [volume, setVolume] = useState(30);
+  // const [volume, setVolume] = useState(30);
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
@@ -41,7 +41,7 @@ export default function Home() {
       if (data) {
         setWorkMinutes(data.work_minutes ?? 25);
         setBreakMinutes(data.break_minutes ?? 5);
-        setVolume(data.volume ?? 30);
+        // setVolume(data.volume ?? 30);
         setSeconds((data.work_minutes ?? 25) * 60);
         setVideoUrl(data.video_url ?? "");
       }
@@ -90,6 +90,14 @@ export default function Home() {
     setProgress(percentage);
   }, [seconds, isWorkSession, workMinutes, breakMinutes]);
 
+  // 作業時間または休憩時間が変更されたときにタイマーを更新
+  useEffect(() => {
+    if (!isRunning) {
+      const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
+      setSeconds(newTime);
+    }
+  }, [workMinutes, breakMinutes, isWorkSession, isRunning]);
+
   // 通知許可の確認
   useEffect(() => {
     if (
@@ -123,21 +131,20 @@ export default function Home() {
     setIsRunning(false);
   };
 
-  // ✅ Apply時にSupabaseに保存
+  // ✅ 設定の保存（将来的にSupabaseへの保存機能を実装する可能性があるため残しておく）
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleApplySettings = async () => {
-    const newTime = isWorkSession ? workMinutes * 60 : breakMinutes * 60;
-    setSeconds(newTime);
     setIsRunning(false);
 
-    if (!session) return;
+    // if (!session) return;
 
-    await supabase.from("settings").upsert({
-      id: session.user.id,
-      work_minutes: workMinutes,
-      break_minutes: breakMinutes,
-      volume: volume,
-      updated_at: new Date().toISOString(),
-    });
+    // await supabase.from("settings").upsert({
+    //   id: session.user.id,
+    //   work_minutes: workMinutes,
+    //   break_minutes: breakMinutes,
+    //   volume: volume,
+    //   updated_at: new Date().toISOString(),
+    // });
   };
 
   if (!isLoaded) {
@@ -186,7 +193,6 @@ export default function Home() {
             setWorkMinutes={setWorkMinutes}
             breakMinutes={breakMinutes}
             setBreakMinutes={setBreakMinutes}
-            handleApplySettings={handleApplySettings}
           />
         </div>
       </main>
