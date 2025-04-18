@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import SettingsModal from "../features/SettingsModal";
 
 interface SettingsCardProps {
   workMinutes: number;
@@ -13,10 +14,27 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
   breakMinutes,
   setBreakMinutes,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return (
     <div>
+      {/* モーダル */}
+      <SettingsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        workMinutes={workMinutes}
+        setWorkMinutes={setWorkMinutes}
+        breakMinutes={breakMinutes}
+        setBreakMinutes={setBreakMinutes}
+      />
+
       {/* カスタム設定 */}
-      <div className="card p-6 w-full transition-all duration-300 hover:shadow-soft-lg">
+      <div
+        className="card p-6 w-full transition-all duration-300 hover:shadow-soft-lg cursor-pointer"
+        onClick={openModal}
+      >
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 gradient-text from-secondary-500 to-accent-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -61,6 +79,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               onChange={(e) => {
                 setWorkMinutes(Number(e.target.value));
               }}
+              onClick={(e) => e.stopPropagation()}
               className="input-field w-24 text-right"
             />
           </label>
@@ -88,6 +107,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               max={60}
               value={breakMinutes}
               onChange={(e) => setBreakMinutes(Number(e.target.value))}
+              onClick={(e) => e.stopPropagation()}
               className="input-field w-24 text-right"
             />
           </label>

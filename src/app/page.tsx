@@ -170,6 +170,10 @@ export default function Home() {
             ? { user: { email: session.user.email } }
             : null
         }
+        workMinutes={workMinutes}
+        setWorkMinutes={setWorkMinutes}
+        breakMinutes={breakMinutes}
+        setBreakMinutes={setBreakMinutes}
       />
       {/* メインコンテンツ */}
       <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-b from-light-100 to-light-300 dark:from-dark-200 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">

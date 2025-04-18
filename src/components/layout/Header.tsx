@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { AuthButton } from "../common/AuthButton";
-import Link from "next/link";
+import SettingsModal from "../features/SettingsModal";
 
 interface HeaderProps {
   toggleTheme: () => void;
@@ -10,16 +10,42 @@ interface HeaderProps {
       email: string;
     };
   } | null;
+  workMinutes: number;
+  setWorkMinutes: (value: number) => void;
+  breakMinutes: number;
+  setBreakMinutes: (value: number) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleTheme, isDark, session }) => {
+const Header: React.FC<HeaderProps> = ({
+  toggleTheme,
+  isDark,
+  session,
+  workMinutes,
+  setWorkMinutes,
+  breakMinutes,
+  setBreakMinutes,
+}) => {
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+  const openSettingsModal = () => setIsSettingsModalOpen(true);
+  const closeSettingsModal = () => setIsSettingsModalOpen(false);
   return (
     <div>
+      {/* 設定モーダル */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={closeSettingsModal}
+        workMinutes={workMinutes}
+        setWorkMinutes={setWorkMinutes}
+        breakMinutes={breakMinutes}
+        setBreakMinutes={setBreakMinutes}
+      />
+
       {/* ヘッダーナビゲーション */}
       <header className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-dark-100/80 backdrop-blur-md shadow-soft">
         <div className="flex items-center gap-2">
-          <Link
-            href="/settings"
+          <button
+            onClick={openSettingsModal}
             className="btn-outline text-sm px-3 py-1.5 rounded-full flex items-center gap-1"
           >
             <svg
@@ -43,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ toggleTheme, isDark, session }) => {
               />
             </svg>
             設定
-          </Link>
+          </button>
           <button
             onClick={toggleTheme}
             className="btn-outline text-sm px-3 py-1.5 rounded-full flex items-center gap-1"
