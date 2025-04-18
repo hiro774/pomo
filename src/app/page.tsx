@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
-import { BGMPlayer } from "@/components/BGMPlayer";
+import { BGMPlayer } from "@/components/features/BGMPlayer";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { AuthButton } from "@/components/common/AuthButton";
 import Link from "next/link";
