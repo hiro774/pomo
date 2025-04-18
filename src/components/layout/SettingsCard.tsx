@@ -35,8 +35,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
           タイマー設定
         </h2>
         <div className="flex flex-col gap-4">
-          <label className="flex justify-between items-center bg-light-200 dark:bg-dark-100 p-4 rounded-xl shadow-inner-soft">
-            <span className="font-medium flex items-center gap-2">
+          <label className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-light-200 dark:bg-dark-100 p-4 rounded-xl shadow-inner-soft">
+            <span className="font-medium flex items-center gap-2 mb-2 sm:mb-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-secondary-500"
@@ -65,8 +65,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               className="input-field w-24 text-right"
             />
           </label>
-          <label className="flex justify-between items-center bg-light-200 dark:bg-dark-100 p-4 rounded-xl shadow-inner-soft">
-            <span className="font-medium flex items-center gap-2">
+          <label className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-light-200 dark:bg-dark-100 p-4 rounded-xl shadow-inner-soft">
+            <span className="font-medium flex items-center gap-2 mb-2 sm:mb-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-primary-500"

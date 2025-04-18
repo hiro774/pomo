@@ -68,7 +68,7 @@ export default function Home() {
       />
       {/* メインコンテンツ */}
       <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-b from-light-100 to-light-300 dark:from-dark-200 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
-        <div className="w-full max-w-md mx-auto animate-slide-up">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto animate-slide-up">
           <SessionStatus isWorkSession={isWorkSession} />
 
           <TimerCard
@@ -82,13 +82,14 @@ export default function Home() {
             handleReset={handleReset}
             handleSkip={handleSkip}
           />
-
-          <SettingsCard
-            workMinutes={workMinutes}
-            setWorkMinutes={setWorkMinutes}
-            breakMinutes={breakMinutes}
-            setBreakMinutes={setBreakMinutes}
-          />
+          <div className="mb-[100px]">
+            <SettingsCard
+              workMinutes={workMinutes}
+              setWorkMinutes={setWorkMinutes}
+              breakMinutes={breakMinutes}
+              setBreakMinutes={setBreakMinutes}
+            />
+          </div>
         </div>
       </main>
       <BGMPlayer videoUrl={videoUrl} />

@@ -48,12 +48,12 @@ const Header: React.FC<HeaderProps> = ({
       />
 
       {/* ヘッダーナビゲーション */}
-      <header className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-dark-100/80 backdrop-blur-md shadow-soft">
-        <div className="flex items-center gap-2">
+      <header className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 bg-white/80 dark:bg-dark-100/80 backdrop-blur-md shadow-soft">
+        <div className="flex items-center flex-wrap gap-2">
           {session?.user && (
             <button
               onClick={openSettingsModal}
-              className="btn-outline text-sm px-3 py-1.5 rounded-full flex items-center gap-1"
+              className="btn-outline text-sm md:text-base px-3 py-1.5 rounded-full flex items-center gap-1"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({
           )}
           <button
             onClick={toggleTheme}
-            className="btn-outline text-sm px-3 py-1.5 rounded-full flex items-center gap-1"
+            className="btn-outline text-sm md:text-base px-3 py-1.5 rounded-full flex items-center gap-1"
             aria-label={
               isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"
             }
@@ -125,33 +125,34 @@ const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        <div className="flex items-center">
+        {/* ログイン/ログアウトボタン */}
+        <div className="flex items-center gap-5">
+          {/* ユーザー情報 */}
+          {/* {session?.user && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-white/80 to-white/60 dark:from-dark-100/80 dark:to-dark-100/60 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 truncate max-w-[180px] sm:max-w-none">
+                {session.user.email} さん
+              </span>
+            </div>
+          )} */}
+
           <AuthButton />
         </div>
       </header>
-
-      {/* ユーザー情報 */}
-      {session?.user && (
-        <div className="fixed top-16 right-4 z-10 bg-white/90 dark:bg-dark-100/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-soft animate-fade-in">
-          <p className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            {session.user.email} さん
-          </p>
-        </div>
-      )}
     </div>
   );
 };

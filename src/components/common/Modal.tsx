@@ -58,16 +58,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300">
       <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-auto animate-scale-up"
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-xl max-h-[90vh] overflow-auto animate-scale-up"
       >
         {title && (
-          <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
+          <div className="relative border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 pt-6 pb-4">
+            <h2 className="text-2xl font-bold text-center flex items-center justify-center gap-2">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
             </button>
           </div>
         )}
-        <div className="p-6">{children}</div>
+        <div className="p-4 sm:p-6">{children}</div>
       </div>
     </div>
   );
