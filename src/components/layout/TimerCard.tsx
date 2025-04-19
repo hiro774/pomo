@@ -42,7 +42,6 @@ const TimerCard: React.FC<TimerCardProps> = ({
             ? "border-secondary-400/30 dark:border-secondary-600/30"
             : "border-primary-400/30 dark:border-primary-600/30"
         }
-        hover:shadow-2xl hover:scale-[1.01]
         bg-gradient-to-br from-white/90 to-white/70
         dark:from-dark-100/90 dark:to-dark-100/70
         backdrop-blur-md
@@ -83,11 +82,11 @@ const TimerCard: React.FC<TimerCardProps> = ({
           }
         `}
         >
-          {/* 装飾的な背景円 */}
+          {/* 背景円 */}
           <div
             className={`
             absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-48 h-48 md:w-56 md:h-56 rounded-full opacity-10
+            w-40 h-40 md:w-48 md:h-48 rounded-full opacity-10
             ${
               isWorkSession
                 ? "bg-secondary-200 dark:bg-secondary-800 animate-pulse-slow"
@@ -106,17 +105,20 @@ const TimerCard: React.FC<TimerCardProps> = ({
           <button
             onClick={handleStart}
             className={`
-              btn py-4 rounded-xl font-bold text-white shadow-lg
-              transform transition-all duration-300
+              py-4 rounded-xl font-bold text-white shadow-lg
               ${
                 isRunning
                   ? "opacity-50 cursor-not-allowed"
-                  : "hover:-translate-y-1 hover:shadow-xl"
+                  : "btn hover:-translate-y-1 hover:shadow-xl transform transition-all duration-300"
               }
               ${
-                isWorkSession
-                  ? "bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700"
-                  : "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
+                !isRunning
+                  ? isWorkSession
+                    ? "bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700"
+                    : "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
+                  : isWorkSession
+                  ? "bg-secondary-500"
+                  : "bg-primary-500"
               }
             `}
             disabled={isRunning}
@@ -142,7 +144,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-lg">スタート</span>
+              <span className="text-lg">Start</span>
             </span>
           </button>
 
@@ -150,14 +152,13 @@ const TimerCard: React.FC<TimerCardProps> = ({
           <button
             onClick={handleStop}
             className={`
-              btn py-4 rounded-xl font-bold text-white shadow-lg
-              transform transition-all duration-300
+              py-4 rounded-xl font-bold text-white shadow-lg
               ${
                 !isRunning
                   ? "opacity-50 cursor-not-allowed"
-                  : "hover:-translate-y-1 hover:shadow-xl"
+                  : "btn hover:-translate-y-1 hover:shadow-xl hover:from-gray-700 hover:to-gray-800 transform transition-all duration-300"
               }
-              bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800
+              bg-gradient-to-r from-gray-600 to-gray-700 
             `}
             disabled={!isRunning}
           >
@@ -176,7 +177,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-lg">ストップ</span>
+              <span className="text-lg">Stop</span>
             </span>
           </button>
         </div>
@@ -186,7 +187,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
           <button
             onClick={handleReset}
             className="
-              btn py-3 rounded-xl font-medium
+              btn py-3 rounded-xl font-bold
               bg-white dark:bg-dark-200 
               border-2 border-gray-300 dark:border-gray-600
               text-gray-700 dark:text-gray-200
@@ -209,7 +210,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              <span className="text-base">リセット</span>
+              <span className="text-lg">Reset</span>
             </span>
           </button>
 
@@ -217,7 +218,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
           <button
             onClick={handleSkip}
             className="
-              btn py-3 rounded-xl font-medium text-white
+              btn py-3 rounded-xl font-bold text-white
               bg-gradient-to-r from-accent-500 to-accent-600 
               hover:from-accent-600 hover:to-accent-700
               transform transition-all duration-300 hover:-translate-y-1
@@ -239,7 +240,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"
                 />
               </svg>
-              <span className="text-base">スキップ</span>
+              <span className="text-lg">Skip</span>
             </span>
           </button>
         </div>

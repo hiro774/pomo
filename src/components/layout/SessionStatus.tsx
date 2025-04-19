@@ -8,7 +8,7 @@ const SessionStatus = ({ isWorkSession }: SessionStatusProps) => {
   return (
     <div>
       {/* セッションステータス */}
-      <div className="mb-8 flex justify-center">
+      <div className="mt-8 mb-8 flex justify-center">
         <div
           className={`
           inline-flex items-center gap-3 px-6 py-3 
@@ -18,7 +18,7 @@ const SessionStatus = ({ isWorkSession }: SessionStatusProps) => {
               ? "bg-gradient-to-r from-secondary-500/90 to-secondary-600/90 dark:from-secondary-600/90 dark:to-secondary-700/90"
               : "bg-gradient-to-r from-primary-500/90 to-primary-600/90 dark:from-primary-600/90 dark:to-primary-700/90"
           }
-          backdrop-blur-md hover:scale-105
+          backdrop-blur-md
         `}
         >
           <div

@@ -23,8 +23,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
         border-2 border-accent-400/20 dark:border-accent-600/20
         bg-gradient-to-br from-white/90 to-white/70
         dark:from-dark-100/90 dark:to-dark-100/70
-        backdrop-blur-md hover:shadow-2xl hover:scale-[1.01]
-        relative z-10
+        backdrop-blur-md relative z-10
       "
       >
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-accent-600 dark:text-accent-400">
