@@ -6,6 +6,7 @@ const useSettings = () => {
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
   const [videoUrl, setVideoUrl] = useState("");
+  const [restVideoUrl, setRestVideoUrl] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
   const settingsLoadedRef = useRef(false);
@@ -45,6 +46,7 @@ const useSettings = () => {
         setWorkMinutes(data.work_minutes ?? 25);
         setBreakMinutes(data.break_minutes ?? 5);
         setVideoUrl(data.video_url ?? "");
+        setRestVideoUrl(data.rest_video_url ?? "");
       }
 
       const elapsed = Date.now() - startTime;
@@ -64,6 +66,8 @@ const useSettings = () => {
     setBreakMinutes,
     videoUrl,
     setVideoUrl,
+    restVideoUrl,
+    setRestVideoUrl,
     isLoaded,
     isDark,
     toggleTheme,

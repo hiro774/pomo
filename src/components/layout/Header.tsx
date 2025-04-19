@@ -16,6 +16,8 @@ interface HeaderProps {
   setBreakMinutes: (value: number) => void;
   videoUrl: string;
   setVideoUrl: (value: string) => void;
+  restVideoUrl: string;
+  setRestVideoUrl: (value: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -28,6 +30,8 @@ const Header: React.FC<HeaderProps> = ({
   setBreakMinutes,
   videoUrl,
   setVideoUrl,
+  restVideoUrl,
+  setRestVideoUrl,
 }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -45,6 +49,8 @@ const Header: React.FC<HeaderProps> = ({
         setBreakMinutes={setBreakMinutes}
         videoUrl={videoUrl}
         setVideoUrl={setVideoUrl}
+        restVideoUrl={restVideoUrl}
+        setRestVideoUrl={setRestVideoUrl}
       />
 
       {/* ヘッダーナビゲーション */}

@@ -47,7 +47,7 @@
   }
 
   .card {
-    @apply bg-white dark:bg-dark-100 rounded-2xl shadow-soft hover:shadow-soft-lg transition-all duration-300;
+    @apply bg-white dark:bg-dark-100 rounded-2xl shadow-soft;
   }
 
   .input-field {
