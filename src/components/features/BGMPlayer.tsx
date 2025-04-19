@@ -39,6 +39,7 @@ export const BGMPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
   const playerRef = useRef<YouTubePlayer | null>(null);
 
   // レスポンシブ対応のためのサイズ設定
@@ -73,7 +74,7 @@ export const BGMPlayer = ({
     width: String(playerSize.width),
     height: String(playerSize.height),
     playerVars: {
-      autoplay: 1,
+      autoplay: shouldAutoPlay ? 1 : 0,
       controls: 1,
     },
   };
@@ -103,6 +104,7 @@ export const BGMPlayer = ({
     if (!isPlaying) return;
     const id = isWorkSession ? extractVideoId(url) : extractVideoId(restUrl);
     if (id) {
+      setShouldAutoPlay(true);
       setVideoId(id);
     }
   }, [isWorkSession, isPlaying, url, restUrl]);
@@ -148,6 +150,7 @@ export const BGMPlayer = ({
   const handleSetVideo = (paramUrl: string) => {
     const id = extractVideoId(paramUrl);
     if (id) {
+      setShouldAutoPlay(false);
       setVideoId(id);
       // setIsPlaying(true);
     } else {
@@ -278,7 +281,7 @@ export const BGMPlayer = ({
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
-                  <div className="hidden">
+                  <div className="">
                     <button
                       onClick={() => handleSetVideo(url)}
                       className="px-3 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
@@ -340,7 +343,7 @@ export const BGMPlayer = ({
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
-                  <div className="hidden">
+                  <div className="">
                     <button
                       onClick={() => handleSetVideo(restUrl)}
                       className="px-3 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
