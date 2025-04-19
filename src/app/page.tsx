@@ -17,6 +17,8 @@ export default function Home() {
     setBreakMinutes,
     videoUrl,
     setVideoUrl,
+    restVideoUrl,
+    setRestVideoUrl,
     isLoaded,
     isDark,
     toggleTheme,
@@ -65,6 +67,8 @@ export default function Home() {
         setBreakMinutes={setBreakMinutes}
         videoUrl={videoUrl}
         setVideoUrl={setVideoUrl}
+        restVideoUrl={restVideoUrl}
+        setRestVideoUrl={setRestVideoUrl}
       />
       {/* メインコンテンツ */}
       <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-br from-light-100 via-light-200 to-light-300 dark:from-dark-200 dark:via-dark-100 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
@@ -102,7 +106,11 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <BGMPlayer videoUrl={videoUrl} />
+      <BGMPlayer
+        videoUrl={videoUrl}
+        restVideoUrl={restVideoUrl}
+        isWorkSession={isWorkSession}
+      />
     </>
   );
 }

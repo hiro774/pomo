@@ -26,32 +26,6 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
         backdrop-blur-md relative z-10
       "
       >
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-accent-600 dark:text-accent-400">
-          <div
-            className="
-            flex items-center justify-center w-10 h-10 
-            bg-accent-100 dark:bg-accent-900/30 
-            rounded-xl shadow-md
-          "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-accent-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-              />
-            </svg>
-          </div>
-          タイマー設定
-        </h2>
-
         <div className="flex flex-col gap-6">
           {/* 作業時間設定 */}
           <div
@@ -59,7 +33,6 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
             bg-gradient-to-r from-secondary-50 to-secondary-100 
             dark:from-dark-200 dark:to-dark-200
             p-5 rounded-2xl shadow-md border border-secondary-200 dark:border-secondary-800/30
-            transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1
           "
           >
             <label className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -128,7 +101,6 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
             bg-gradient-to-r from-primary-50 to-primary-100 
             dark:from-dark-200 dark:to-dark-200
             p-5 rounded-2xl shadow-md border border-primary-200 dark:border-primary-800/30
-            transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1
           "
           >
             <label className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
