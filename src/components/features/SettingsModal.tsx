@@ -38,6 +38,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [localVideoUrl, setLocalVideoUrl] = useState(videoUrl);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // 入力フィールド用の文字列ステート
+  const [workInput, setWorkInput] = useState(localWorkMinutes.toString());
+  const [breakInput, setBreakInput] = useState(localBreakMinutes.toString());
+
   const [localRestVideoUrl, setLocalRestVideoUrl] = useState("");
 
   // 設定の読み込み
@@ -63,6 +67,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         .single();
 
       if (data) {
+        console.log("fetchするよ");
+        console.log(data);
         setLocalWorkMinutes(data.work_minutes ?? workMinutes);
         setLocalBreakMinutes(data.break_minutes ?? breakMinutes);
         setLocalVideoUrl(data.video_url ?? "");
@@ -77,11 +83,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
 
     if (isOpen) {
+      console.log("生きてる？");
       setIsLoaded(false); // モーダルが開かれるたびにローディング状態にリセット
-      setLocalWorkMinutes(workMinutes);
-      setLocalBreakMinutes(breakMinutes);
-      setLocalVideoUrl(videoUrl);
-      setLocalRestVideoUrl(restVideoUrl);
+      // setLocalWorkMinutes(workMinutes);
+      // setLocalBreakMinutes(breakMinutes);
+      // setWorkInput(workMinutes.toString());
+      // setBreakInput(breakMinutes.toString());
+      // setLocalVideoUrl(videoUrl);
+      // setLocalRestVideoUrl(restVideoUrl);
       fetchSettings();
     }
   }, [
@@ -93,6 +102,43 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     videoUrl,
     restVideoUrl,
   ]);
+
+  // 入力値の検証と更新
+  const handleWorkChange = (value: string) => {
+    setWorkInput(value);
+
+    // 空文字列でない場合のみ値を更新
+    if (value !== "") {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= 0 && numValue <= 999) {
+        setLocalWorkMinutes(numValue);
+      }
+    }
+  };
+
+  const handleBreakChange = (value: string) => {
+    setBreakInput(value);
+
+    // 空文字列でない場合のみ値を更新
+    if (value !== "") {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= 0 && numValue <= 999) {
+        setLocalBreakMinutes(numValue);
+      }
+    }
+  };
+
+  // フォーカスが外れた時に空の場合は0に設定
+  const handleBlur = (
+    value: string,
+    setter: (value: number) => void,
+    inputSetter: (value: string) => void
+  ) => {
+    if (value === "") {
+      setter(0);
+      inputSetter("0");
+    }
+  };
 
   const handleSave = async () => {
     // 親コンポーネントの状態を更新
@@ -207,11 +253,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
             <div className="relative mt-1">
               <input
-                type="number"
-                value={localWorkMinutes}
-                min={0}
-                max={999}
-                onChange={(e) => setLocalWorkMinutes(Number(e.target.value))}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={workInput}
+                onChange={(e) => handleWorkChange(e.target.value)}
+                onBlur={() =>
+                  handleBlur(workInput, setLocalWorkMinutes, setWorkInput)
+                }
                 className="w-full px-4 py-3 text-center text-xl font-bold bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all shadow-inner-soft"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -256,11 +305,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
             <div className="relative mt-1">
               <input
-                type="number"
-                value={localBreakMinutes}
-                min={0}
-                max={999}
-                onChange={(e) => setLocalBreakMinutes(Number(e.target.value))}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={breakInput}
+                onChange={(e) => handleBreakChange(e.target.value)}
+                onBlur={() =>
+                  handleBlur(breakInput, setLocalBreakMinutes, setBreakInput)
+                }
                 className="w-full px-4 py-3 text-center text-xl font-bold bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all shadow-inner-soft"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">

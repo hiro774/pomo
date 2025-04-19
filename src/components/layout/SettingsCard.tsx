@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 interface SettingsCardProps {
   workMinutes: number;
   setWorkMinutes: (value: number) => void;
@@ -11,6 +13,54 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
   breakMinutes,
   setBreakMinutes,
 }) => {
+  const [workInput, setWorkInput] = useState(workMinutes.toString());
+  const [breakInput, setBreakInput] = useState(breakMinutes.toString());
+
+  // 親コンポーネントから値が変更された場合に入力値を更新
+  useEffect(() => {
+    setWorkInput(workMinutes.toString());
+  }, [workMinutes]);
+
+  useEffect(() => {
+    setBreakInput(breakMinutes.toString());
+  }, [breakMinutes]);
+
+  // 入力値の検証と更新
+  const handleWorkChange = (value: string) => {
+    setWorkInput(value);
+
+    // 空文字列でない場合のみ親コンポーネントの値を更新
+    if (value !== "") {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= 0 && numValue <= 999) {
+        setWorkMinutes(numValue);
+      }
+    }
+  };
+
+  const handleBreakChange = (value: string) => {
+    setBreakInput(value);
+
+    // 空文字列でない場合のみ親コンポーネントの値を更新
+    if (value !== "") {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= 0 && numValue <= 999) {
+        setBreakMinutes(numValue);
+      }
+    }
+  };
+
+  // フォーカスが外れた時に空の場合は0に設定
+  const handleBlur = (
+    value: string,
+    setter: (value: number) => void,
+    inputSetter: (value: string) => void
+  ) => {
+    if (value === "") {
+      setter(0);
+      inputSetter("0");
+    }
+  };
   return (
     <div className="relative">
       {/* 背景装飾 */}
@@ -71,13 +121,14 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
 
               <div className="relative">
                 <input
-                  type="number"
-                  min={0}
-                  max={999}
-                  value={workMinutes}
-                  onChange={(e) => {
-                    setWorkMinutes(Number(e.target.value));
-                  }}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={workInput}
+                  onChange={(e) => handleWorkChange(e.target.value)}
+                  onBlur={() =>
+                    handleBlur(workInput, setWorkMinutes, setWorkInput)
+                  }
                   onClick={(e) => e.stopPropagation()}
                   className="
                     input-field w-24 text-center text-xl font-bold
@@ -139,11 +190,14 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
 
               <div className="relative">
                 <input
-                  type="number"
-                  min={0}
-                  max={999}
-                  value={breakMinutes}
-                  onChange={(e) => setBreakMinutes(Number(e.target.value))}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={breakInput}
+                  onChange={(e) => handleBreakChange(e.target.value)}
+                  onBlur={() =>
+                    handleBlur(breakInput, setBreakMinutes, setBreakInput)
+                  }
                   onClick={(e) => e.stopPropagation()}
                   className="
                     input-field w-24 text-center text-xl font-bold
