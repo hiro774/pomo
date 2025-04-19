@@ -51,7 +51,7 @@
   }
 
   .input-field {
-    @apply border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-dark-100 focus:border-primary-400 dark:focus:border-primary-500 transition-all duration-200 w-full;
+    @apply border border-gray-300 dark:border-gray-600 rounded-lg pr-3 py-2 bg-white dark:bg-dark-100 focus:border-primary-400 dark:focus:border-primary-500 transition-all duration-200 w-full;
   }
 
   .gradient-text {
@@ -144,4 +144,14 @@ html {
 
 .animate-slide-up {
   animation: slide-up 0.3s ease-out forwards;
+}
+
+.input-field::-webkit-inner-spin-button,
+.input-field::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-field[type="number"] {
+  -moz-appearance: textfield;
 }

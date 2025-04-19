@@ -99,8 +99,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               <div className="relative">
                 <input
                   type="number"
-                  min={1}
-                  max={120}
+                  min={0}
+                  max={999}
                   value={workMinutes}
                   onChange={(e) => {
                     setWorkMinutes(Number(e.target.value));
@@ -168,8 +168,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
               <div className="relative">
                 <input
                   type="number"
-                  min={1}
-                  max={60}
+                  min={0}
+                  max={999}
                   value={breakMinutes}
                   onChange={(e) => setBreakMinutes(Number(e.target.value))}
                   onClick={(e) => e.stopPropagation()}

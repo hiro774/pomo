@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Modal from "../common/Modal";
@@ -94,9 +95,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       });
 
       if (!error) {
-        alert("保存しました！");
+        toast.success("保存しました！");
       } else {
-        alert("保存に失敗しました");
+        toast.error("保存に失敗しました…");
       }
     }
 
@@ -109,8 +110,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="flex justify-center items-center h-40">
           <div className="animate-pulse-slow flex flex-col items-center">
             <div className="h-16 w-16 rounded-full bg-gradient-to-r from-primary-400 to-secondary-400 animate-spin opacity-70"></div>
-            <p className="mt-4 text-sm font-medium text-gray-600 dark:text-gray-300">
-              読み込み中...
+            <p className="mt-4 ml-2 text-md font-medium text-gray-600 dark:text-gray-300">
+              loading...
             </p>
           </div>
         </div>
@@ -144,7 +145,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          基本設定
+          設定
         </div>
       }
     >
@@ -171,7 +172,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <input
               type="number"
               value={localWorkMinutes}
-              min={1}
+              min={0}
+              max={999}
               onChange={(e) => setLocalWorkMinutes(Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
             />
@@ -200,7 +202,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <input
               type="number"
               value={localBreakMinutes}
-              min={1}
+              min={0}
+              max={999}
               onChange={(e) => setLocalBreakMinutes(Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
             />

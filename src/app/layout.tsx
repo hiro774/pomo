@@ -1,5 +1,6 @@
 "use client";
 
+import { Toaster } from "react-hot-toast";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { supabase } from "@/lib/supabase";
 import "../styles/globals.css";
@@ -17,7 +18,12 @@ export default function RootLayout({
           name="description"
           content="ポモドーロタイマーアプリ - 作業と休憩を効率的に管理"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href="/images/pomo.png"
+          type="image/png"
+          sizes="512x512"
+        />
         <title>Pomo - ポモドーロタイマー</title>
       </head>
       <body className="antialiased min-h-screen bg-light-100 dark:bg-dark-200 text-gray-800 dark:text-gray-100 transition-colors duration-300">
@@ -31,7 +37,10 @@ export default function RootLayout({
             </div>
 
             {/* メインコンテンツ */}
-            <main className="relative z-10">{children}</main>
+            <main className="relative z-10">
+              <Toaster position="top-right" />
+              {children}
+            </main>
           </div>
         </SessionContextProvider>
       </body>

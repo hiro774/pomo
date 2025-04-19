@@ -41,8 +41,8 @@ export default function Home() {
       <main className="flex min-h-screen items-center justify-center bg-light-100 dark:bg-dark-200">
         <div className="animate-pulse-slow flex flex-col items-center">
           <div className="h-32 w-32 rounded-full bg-gradient-to-r from-primary-400 to-secondary-400 animate-spin opacity-70"></div>
-          <p className="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">
-            読み込み中...
+          <p className="mt-4 ml-3 text-base font-bold text-gray-600 dark:text-gray-300">
+            loading...
           </p>
         </div>
       </main>
