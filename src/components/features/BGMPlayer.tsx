@@ -101,10 +101,13 @@ export const BGMPlayer = ({
 
   // ワークセッションが変更されたらyoutubeの動画も変更
   useEffect(() => {
-    if (!isPlaying) return;
     const id = isWorkSession ? extractVideoId(url) : extractVideoId(restUrl);
-    if (id) {
+    if (isPlaying) {
       setShouldAutoPlay(true);
+    } else {
+      setShouldAutoPlay(false);
+    }
+    if (id) {
       setVideoId(id);
     }
   }, [isWorkSession, isPlaying, url, restUrl]);
@@ -117,16 +120,18 @@ export const BGMPlayer = ({
     }
   };
 
-  const onStateChange = (event: { data: number }) => {
+  const onStateChange = (event: { data: number; target: YouTubePlayer }) => {
     const YT = window.YT;
     if (!YT) return;
 
     switch (event.data) {
+      case YT.PlayerState.ENDED:
+        event.target.playVideo();
+        break;
       case YT.PlayerState.PLAYING:
         setIsPlaying(true);
         break;
       case YT.PlayerState.PAUSED:
-      case YT.PlayerState.ENDED:
         setIsPlaying(false);
         break;
     }
@@ -147,8 +152,13 @@ export const BGMPlayer = ({
     });
   };
 
-  const handleSetVideo = (paramUrl: string) => {
-    const id = extractVideoId(paramUrl);
+  const handleSetVideo = () => {
+    let id;
+    if (isWorkSession) {
+      id = extractVideoId(url);
+    } else {
+      id = extractVideoId(restUrl);
+    }
     if (id) {
       setShouldAutoPlay(false);
       setVideoId(id);
@@ -281,9 +291,9 @@ export const BGMPlayer = ({
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
-                  <div className="">
+                  <div className="hidden">
                     <button
-                      onClick={() => handleSetVideo(url)}
+                      onClick={handleSetVideo}
                       className="px-3 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
                     >
                       設定
@@ -343,9 +353,9 @@ export const BGMPlayer = ({
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
-                  <div className="">
+                  <div className="hidden">
                     <button
-                      onClick={() => handleSetVideo(restUrl)}
+                      onClick={handleSetVideo}
                       className="px-3 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
                     >
                       設定
