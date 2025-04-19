@@ -34,6 +34,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [localVideoUrl, setLocalVideoUrl] = useState(videoUrl);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [localRestVideoUrl, setLocalRestVideoUrl] = useState("");
+
   // 設定の読み込み
   useEffect(() => {
     const fetchSettings = async () => {
@@ -60,6 +62,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         setLocalWorkMinutes(data.work_minutes ?? workMinutes);
         setLocalBreakMinutes(data.break_minutes ?? breakMinutes);
         setLocalVideoUrl(data.video_url ?? "");
+        setLocalRestVideoUrl(data.rest_video_url ?? "");
       }
 
       const elapsedTime = Date.now() - startTime;
@@ -74,6 +77,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       setLocalWorkMinutes(workMinutes);
       setLocalBreakMinutes(breakMinutes);
       setLocalVideoUrl(videoUrl);
+      // setLocalRestVideoUrl(restVideoUrl); 未実装
       fetchSettings();
     }
   }, [isOpen, session, supabase, workMinutes, breakMinutes, videoUrl]);
@@ -83,6 +87,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     setWorkMinutes(localWorkMinutes);
     setBreakMinutes(localBreakMinutes);
     setVideoUrl(localVideoUrl);
+    // serRestVideoUrl(localRestVideoUrl); 未実装
 
     // Supabaseに保存（ログインしている場合）
     if (session) {
@@ -91,6 +96,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         work_minutes: localWorkMinutes,
         break_minutes: localBreakMinutes,
         video_url: localVideoUrl,
+        rest_video_url: localRestVideoUrl,
         updated_at: new Date().toISOString(),
       });
 
@@ -227,7 +233,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
                 />
               </svg>
-              YouTube動画URL:
+              YouTube動画URL :
             </span>
             <input
               type="text"
@@ -238,6 +244,35 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </label>
         </div>
+
+        {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+          <label className="flex flex-col gap-2">
+            <span className="font-medium flex items-center gap-1 text-sm sm:text-base">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-purple-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                />
+              </svg>
+              YouTube動画URL2 :
+            </span>
+            <input
+              type="text"
+              value={localRestVideoUrl}
+              onChange={(e) => setLocalRestVideoUrl(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+              placeholder="https://youtu.be/abc123..."
+            />
+          </label>
+        </div> */}
 
         <button
           onClick={handleSave}
