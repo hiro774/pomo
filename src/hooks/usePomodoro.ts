@@ -12,21 +12,33 @@ const usePomodoro = ({ workMinutes, breakMinutes }: PomodoroProps) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
   const [progress, setProgress] = useState(100);
+  const [elapsedBeforePause, setElapsedBeforePause] = useState(0);
 
   const isRunningRef = useRef(isRunning);
 
   // タイマー操作関数
   const handleStart = () => {
-    setStartTime(Date.now());
+    const now = Date.now();
+    const newStartTime = now - elapsedBeforePause * 1000;
+    setStartTime(newStartTime);
     setDuration(isWorkSession ? workMinutes * 60 : breakMinutes * 60);
     setIsRunning(true);
   };
 
-  const handleStop = () => setIsRunning(false);
+  const handleStop = () => {
+    if (startTime !== null) {
+      const now = Date.now();
+      const elapsed = Math.floor((now - startTime) / 1000);
+      setElapsedBeforePause((prev) => prev + elapsed);
+      setStartTime(null);
+    }
+    setIsRunning(false);
+  };
 
   const handleReset = () => {
     setIsRunning(false);
     setSeconds(isWorkSession ? workMinutes * 60 : breakMinutes * 60);
+    setElapsedBeforePause(0);
   };
 
   const handleSkip = () => {
@@ -34,6 +46,7 @@ const usePomodoro = ({ workMinutes, breakMinutes }: PomodoroProps) => {
     setIsWorkSession(next);
     setSeconds(next ? workMinutes * 60 : breakMinutes * 60);
     setIsRunning(false);
+    setElapsedBeforePause(0);
   };
 
   // 時間フォーマット関数
@@ -77,6 +90,7 @@ const usePomodoro = ({ workMinutes, breakMinutes }: PomodoroProps) => {
 
           const next = !isWorkSession;
           setIsWorkSession(next);
+          setElapsedBeforePause(0);
 
           const nextDuration = next ? workMinutes * 60 : breakMinutes * 60;
           setDuration(nextDuration);
