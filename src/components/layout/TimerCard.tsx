@@ -48,7 +48,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
       `}
       >
         {/* 進捗バーコンテナ */}
-        <div className="relative w-full h-4 bg-gray-200/50 dark:bg-gray-700/50 rounded-full mb-8 overflow-hidden shadow-inner-soft">
+        <div className="relative w-full h-4 bg-gray-200/50 dark:bg-gray-700/50 rounded-full mb-10 overflow-hidden shadow-inner-soft">
           {/* 進捗バー */}
           <div
             className={`
@@ -104,29 +104,26 @@ const TimerCard: React.FC<TimerCardProps> = ({
           {/* スタートボタン */}
           <button
             onClick={handleStart}
+            disabled={isRunning}
             className={`
-              py-4 rounded-xl font-bold text-white shadow-lg
+              rounded-xl font-bold text-white shadow-lg px-6 py-2 text-lg
+              transition-all duration-300 transform
               ${
                 isRunning
                   ? "opacity-50 cursor-not-allowed"
-                  : "btn hover:-translate-y-0.5 hover:shadow-xl transform transition-all duration-300"
+                  : "hover:-translate-y-1 hover:shadow-xl"
               }
               ${
-                !isRunning
-                  ? isWorkSession
-                    ? "bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700"
-                    : "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
-                  : isWorkSession
-                  ? "bg-secondary-500"
-                  : "bg-primary-500"
+                isWorkSession
+                  ? "bg-gradient-to-r from-secondary-500 to-secondary-600"
+                  : "bg-gradient-to-r from-primary-500 to-primary-600"
               }
             `}
-            disabled={isRunning}
           >
             <span className="flex items-center justify-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-9 w-9"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -144,28 +141,29 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-lg">Start</span>
+              {/* <span className="text-lg">Start</span> */}
             </span>
           </button>
 
           {/* ストップボタン */}
           <button
             onClick={handleStop}
+            disabled={!isRunning}
             className={`
-              py-4 rounded-xl font-bold text-white shadow-lg
+              rounded-xl font-bold text-white shadow-lg px-6 py-2 text-lg
+              transition-all duration-300 transform
               ${
                 !isRunning
                   ? "opacity-50 cursor-not-allowed"
-                  : "btn hover:-translate-y-0.5 hover:shadow-xl hover:from-gray-700 hover:to-gray-800 transform transition-all duration-300"
+                  : "hover:-translate-y-1 hover:shadow-xl hover:from-gray-700 hover:to-gray-800"
               }
-              bg-gradient-to-r from-gray-600 to-gray-700 
+              bg-gradient-to-r from-gray-600 to-gray-700
             `}
-            disabled={!isRunning}
           >
             <span className="flex items-center justify-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-9 w-9"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -177,7 +175,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-lg">Stop</span>
+              {/* <span className="text-lg">Stop</span> */}
             </span>
           </button>
         </div>
@@ -186,19 +184,19 @@ const TimerCard: React.FC<TimerCardProps> = ({
           {/* リセットボタン */}
           <button
             onClick={handleReset}
-            className="
-              btn py-3 rounded-xl font-bold
-              bg-white dark:bg-dark-200 
+            className={`
+              btn rounded-xl font-bold px-6 py-2 text-lg
+              bg-white dark:bg-dark-200
               border-2 border-gray-300 dark:border-gray-600
               text-gray-700 dark:text-gray-200
               hover:bg-gray-100 dark:hover:bg-dark-100
-              transform transition-all duration-300 hover:-translate-y-0.5
-            "
+              transition-all duration-300 transform hover:-translate-y-1
+            `}
           >
             <span className="flex items-center justify-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-8 w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -210,25 +208,25 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              <span className="text-lg">Reset</span>
+              {/* <span className="text-lg">Reset</span> */}
             </span>
           </button>
 
           {/* スキップボタン */}
           <button
             onClick={handleSkip}
-            className="
-              btn py-3 rounded-xl font-bold text-white
-              bg-gradient-to-r from-accent-500 to-accent-600 
+            className={`
+              btn rounded-xl font-bold text-white px-6 py-2 text-lg
+              bg-gradient-to-r from-accent-500 to-accent-600
               hover:from-accent-600 hover:to-accent-700
-              transform transition-all duration-300 hover:-translate-y-0.5
+              transition-all duration-300 transform hover:-translate-y-1
               shadow-md hover:shadow-lg
-            "
+            `}
           >
             <span className="flex items-center justify-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-8 w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -240,7 +238,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                   d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"
                 />
               </svg>
-              <span className="text-lg">Skip</span>
+              {/* <span className="text-lg">Skip</span> */}
             </span>
           </button>
         </div>

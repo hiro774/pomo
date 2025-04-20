@@ -23,6 +23,7 @@ const SessionStatus = ({ isWorkSession }: SessionStatusProps) => {
         >
           <div
             className={`
+            hidden sm:block
             w-4 h-4 rounded-full animate-pulse-slow
             ${
               isWorkSession
@@ -36,8 +37,8 @@ const SessionStatus = ({ isWorkSession }: SessionStatusProps) => {
           </p>
           <div
             className={`
-            hidden sm:flex items-center gap-1 ml-1 px-2 py-1 
-            bg-white/20 rounded-lg text-white text-sm font-medium
+            flex items-center gap-1 ml-1 px-2 py-1 
+            bg-white/20 rounded-lg text-white text-xs sm:text-sm font-medium
           `}
           >
             {isWorkSession ? (

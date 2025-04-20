@@ -26,7 +26,7 @@ export default function RootLayout({
         />
         <title>Pomo - ポモドーロタイマー</title>
       </head>
-      <body className="antialiased min-h-screen bg-light-100 dark:bg-dark-200 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+      <body className="overflow-x-hidden antialiased min-h-screen bg-light-100 dark:bg-dark-200 text-gray-800 dark:text-gray-100 transition-colors duration-300">
         <SessionContextProvider supabaseClient={supabase}>
           <div className="relative">
             {/* 背景デザイン要素 */}
@@ -37,7 +37,7 @@ export default function RootLayout({
             </div>
 
             {/* メインコンテンツ */}
-            <main className="relative z-10">
+            <main className="relative z-10 overflow-x-hidden">
               <Toaster position="top-right" />
               {children}
             </main>

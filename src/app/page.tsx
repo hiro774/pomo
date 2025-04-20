@@ -71,9 +71,9 @@ export default function Home() {
         setRestVideoUrl={setRestVideoUrl}
       />
       {/* メインコンテンツ */}
-      <main className="flex flex-col items-center justify-center min-h-screen pt-16 pb-8 px-4 bg-gradient-to-br from-light-100 via-light-200 to-light-300 dark:from-dark-200 dark:via-dark-100 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+      <main className="w-full flex flex-col items-center justify-center min-h-screen pt-16 pb-8 bg-gradient-to-br from-light-100 via-light-200 to-light-300 dark:from-dark-200 dark:via-dark-100 dark:to-dark-300 text-gray-800 dark:text-gray-100 transition-colors duration-300">
         <div className="w-full max-w-md sm:max-w-lg md:max-w-xl mx-auto animate-slide-up">
-          <div className="relative">
+          <div className="items-center mx-auto w-[90%] md:w-[100%] relative">
             {/* 背景の装飾要素 */}
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-br from-primary-300/20 to-primary-500/20 dark:from-primary-500/10 dark:to-primary-700/10 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-20 -right-10 w-60 h-60 bg-gradient-to-tr from-secondary-300/20 to-secondary-500/20 dark:from-secondary-500/10 dark:to-secondary-700/10 rounded-full blur-3xl"></div>
@@ -105,12 +105,12 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <BGMPlayer
+          videoUrl={videoUrl}
+          restVideoUrl={restVideoUrl}
+          isWorkSession={isWorkSession}
+        />
       </main>
-      <BGMPlayer
-        videoUrl={videoUrl}
-        restVideoUrl={restVideoUrl}
-        isWorkSession={isWorkSession}
-      />
     </>
   );
 }
