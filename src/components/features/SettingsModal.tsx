@@ -67,8 +67,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         .single();
 
       if (data) {
-        console.log("fetchするよ");
-        console.log(data);
         setLocalWorkMinutes(data.work_minutes ?? workMinutes);
         setLocalBreakMinutes(data.break_minutes ?? breakMinutes);
         setLocalVideoUrl(data.video_url ?? "");
@@ -83,7 +81,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
 
     if (isOpen) {
-      console.log("生きてる？");
       setIsLoaded(false); // モーダルが開かれるたびにローディング状態にリセット
       // setLocalWorkMinutes(workMinutes);
       // setLocalBreakMinutes(breakMinutes);
@@ -261,6 +258,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 onBlur={() =>
                   handleBlur(workInput, setLocalWorkMinutes, setWorkInput)
                 }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
                 className="w-full px-4 py-3 text-center text-xl font-bold bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all shadow-inner-soft"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -313,6 +315,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 onBlur={() =>
                   handleBlur(breakInput, setLocalBreakMinutes, setBreakInput)
                 }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
                 className="w-full px-4 py-3 text-center text-xl font-bold bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all shadow-inner-soft"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -373,6 +380,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 onChange={(e) => setLocalVideoUrl(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all text-gray-700 dark:text-gray-200"
                 placeholder="https://youtu.be/abc123..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
               />
             </div>
           </label>
@@ -429,6 +441,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 onChange={(e) => setLocalRestVideoUrl(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-gray-700 dark:text-gray-200"
                 placeholder="https://youtu.be/abc123..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
               />
             </div>
           </label>

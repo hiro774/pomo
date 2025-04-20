@@ -61,6 +61,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
       inputSetter("0");
     }
   };
+
   return (
     <div className="relative">
       {/* 背景装飾 */}
@@ -130,6 +131,11 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
                     handleBlur(workInput, setWorkMinutes, setWorkInput)
                   }
                   onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      (e.target as HTMLInputElement).blur();
+                    }
+                  }}
                   className="
                     input-field w-24 text-center text-xl font-bold
                     bg-white dark:bg-dark-100 
@@ -199,6 +205,11 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
                     handleBlur(breakInput, setBreakMinutes, setBreakInput)
                   }
                   onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      (e.target as HTMLInputElement).blur();
+                    }
+                  }}
                   className="
                     input-field w-24 text-center text-xl font-bold
                     bg-white dark:bg-dark-100 
