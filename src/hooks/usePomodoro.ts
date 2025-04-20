@@ -23,6 +23,7 @@ const usePomodoro = ({ workMinutes, breakMinutes }: PomodoroProps) => {
     setStartTime(newStartTime);
     setDuration(isWorkSession ? workMinutes * 60 : breakMinutes * 60);
     setIsRunning(true);
+    setElapsedBeforePause(0);
   };
 
   const handleStop = () => {
