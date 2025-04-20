@@ -40,7 +40,50 @@ export const BGMPlayer = ({
   const [volume, setVolume] = useState(50);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
+  const [currentWorkTime, setCurrentWorkTime] = useState(0);
+  const [currentRestTime, setCurrentRestTime] = useState(0);
+  const [startWorkMinutes, setStartWorkMinutes] = useState(0);
+  const [startRestMinutes, setStartRestMinutes] = useState(0);
   const playerRef = useRef<YouTubePlayer | null>(null);
+
+  useEffect(() => {
+    if (isWorkSession) {
+      const interval = setInterval(() => {
+        if (playerRef.current) {
+          const time = playerRef.current.getCurrentTime();
+          setCurrentWorkTime(time);
+          console.log(`作業BGM経過時間：${time}`);
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    } else {
+      const interval = setInterval(() => {
+        if (playerRef.current) {
+          const time = playerRef.current.getCurrentTime();
+          setCurrentRestTime(time);
+          console.log(`休憩BGM経過時間：${time}`);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isWorkSession]);
+
+  useEffect(() => {
+    if (isWorkSession) {
+      setStartWorkMinutes(currentWorkTime);
+    }
+  }, [isWorkSession]);
+
+  useEffect(() => {
+    if (!isWorkSession) {
+      setStartRestMinutes(currentRestTime);
+    }
+  }, [isWorkSession]);
+
+  // useEffect(() => {
+  //   setStartMinutes(currentWorkTime);
+  // }, []);
 
   // レスポンシブ対応のためのサイズ設定
   const getPlayerSize = () => {
@@ -76,16 +119,19 @@ export const BGMPlayer = ({
     playerVars: {
       autoplay: shouldAutoPlay ? 1 : 0,
       controls: 1,
+      start: isWorkSession ? startWorkMinutes : startRestMinutes,
     },
   };
 
   // videoUrlが変更されたらurlも更新
   useEffect(() => {
     setUrl(videoUrl ?? "");
+    setCurrentWorkTime(0);
   }, [videoUrl]);
 
   useEffect(() => {
     setResrUrl(restVideoUrl ?? "");
+    setCurrentRestTime(0);
   }, [restVideoUrl]);
 
   // 初期URLから videoId を抽出して再生準備
@@ -287,7 +333,15 @@ export const BGMPlayer = ({
                   <input
                     type="text"
                     value={url}
-                    onChange={(e) => setUrl(String(e.target.value))}
+                    onChange={(e) => {
+                      setUrl(String(e.target.value));
+                      setCurrentWorkTime(0);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        (e.target as HTMLInputElement).blur();
+                      }
+                    }}
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
@@ -329,9 +383,6 @@ export const BGMPlayer = ({
                   <p className="font-bold text-primary-700 dark:text-primary-300">
                     休憩中のBGM
                   </p>
-                  {/* <p className="text-xs text-gray-500 dark:text-gray-400">
-                    リラックスできる音楽のURLを入力
-                  </p> */}
                 </div>
               </div>
               <div className="relative mt-1">
@@ -349,7 +400,15 @@ export const BGMPlayer = ({
                   <input
                     type="text"
                     value={restUrl}
-                    onChange={(e) => setResrUrl(String(e.target.value))}
+                    onChange={(e) => {
+                      setResrUrl(String(e.target.value));
+                      setCurrentRestTime(0);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        (e.target as HTMLInputElement).blur();
+                      }
+                    }}
                     placeholder="https://youtu.be/abc123..."
                     className="w-full pl-9 pr-2 py-2.5 bg-white dark:bg-dark-100 border-2 border-primary-300 dark:border-primary-700 rounded-lg shadow-inner-soft focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-gray-700 dark:text-gray-200 text-sm"
                   />
