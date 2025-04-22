@@ -41,12 +41,11 @@
 <br><br>
 
 ## 3. デモ
-アプリケーションの主な画面と機能：
+![Pomo home_dark](/public/images/home_dark.webp)
+![Pomo home_light](/public/images/home_light.webp)
+![Pomo mod_light](/public/images/mod_dark.webp)
+![Pomo mod_dark](/public/images/mod_light.webp)
 
-- **メイン画面**: タイマー表示、開始/停止/リセット/スキップボタン、進捗バー
-- **設定カード**: 作業時間と休憩時間の設定
-- **BGMプレーヤー**: YouTube URLの入力、再生/停止ボタン、音量調整
-- **ヘッダー**: ダークモード切り替え、ログイン/ログアウトボタン
 <br><br>
 
 ## 4. 使用技術
