@@ -81,10 +81,6 @@ export const BGMPlayer = ({
     }
   }, [isWorkSession]);
 
-  // useEffect(() => {
-  //   setStartMinutes(currentWorkTime);
-  // }, []);
-
   // レスポンシブ対応のためのサイズ設定
   const getPlayerSize = () => {
     // 画面幅に応じてプレイヤーサイズを調整

@@ -60,21 +60,6 @@ const usePomodoro = ({ workMinutes, breakMinutes }: PomodoroProps) => {
     )}`;
   };
 
-  // タブの可視性変更を監視
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        console.log("タブがアクティブになりました");
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
   // タイマー処理
   useEffect(() => {
     let timer: NodeJS.Timeout;
