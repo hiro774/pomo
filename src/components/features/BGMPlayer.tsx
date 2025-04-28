@@ -35,15 +35,18 @@ export const BGMPlayer = ({
 }: BGMPlayerProps) => {
   const [url, setUrl] = useState(videoUrl ?? "");
   const [restUrl, setResrUrl] = useState(restVideoUrl ?? "");
+
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
+
   const [currentWorkTime, setCurrentWorkTime] = useState(0);
   const [currentRestTime, setCurrentRestTime] = useState(0);
   const [startWorkMinutes, setStartWorkMinutes] = useState(0);
   const [startRestMinutes, setStartRestMinutes] = useState(0);
+
   const playerRef = useRef<YouTubePlayer | null>(null);
 
   useEffect(() => {
@@ -52,7 +55,6 @@ export const BGMPlayer = ({
         if (playerRef.current) {
           const time = playerRef.current.getCurrentTime();
           setCurrentWorkTime(time);
-          console.log(`作業BGM経過時間：${time}`);
         }
       }, 1000);
 
@@ -62,7 +64,6 @@ export const BGMPlayer = ({
         if (playerRef.current) {
           const time = playerRef.current.getCurrentTime();
           setCurrentRestTime(time);
-          console.log(`休憩BGM経過時間：${time}`);
         }
       }, 1000);
       return () => clearInterval(interval);
@@ -70,12 +71,14 @@ export const BGMPlayer = ({
   }, [isWorkSession]);
 
   useEffect(() => {
+    if (!url || !restUrl) return;
     if (isWorkSession) {
       setStartWorkMinutes(currentWorkTime);
     }
   }, [isWorkSession]);
 
   useEffect(() => {
+    if (!url || !restUrl) return;
     if (!isWorkSession) {
       setStartRestMinutes(currentRestTime);
     }
@@ -115,7 +118,14 @@ export const BGMPlayer = ({
     playerVars: {
       autoplay: shouldAutoPlay ? 1 : 0,
       controls: 1,
-      start: isWorkSession ? startWorkMinutes : startRestMinutes,
+      start:
+        url && !restUrl
+          ? startWorkMinutes
+          : !url && restUrl
+          ? startRestMinutes
+          : isWorkSession
+          ? startWorkMinutes
+          : startRestMinutes,
     },
   };
 
@@ -143,6 +153,7 @@ export const BGMPlayer = ({
 
   // ワークセッションが変更されたらyoutubeの動画も変更
   useEffect(() => {
+    if (!url || !restUrl) return;
     const id = isWorkSession ? extractVideoId(url) : extractVideoId(restUrl);
     if (isPlaying) {
       setShouldAutoPlay(true);
@@ -204,7 +215,6 @@ export const BGMPlayer = ({
     if (id) {
       setShouldAutoPlay(false);
       setVideoId(id);
-      // setIsPlaying(true);
     } else {
       alert("無効なYouTube URLです！");
     }
