@@ -6,7 +6,8 @@
 3. [デモ](#3-デモ)
 4. [使用技術](#4-使用技術)
 5. [ローカルでの動かし方](#5-ローカルでの動かし方)
-6. [ライセンス](#6-ライセンス)
+6. [CI/CD](#6-cicd)
+7. [ライセンス](#7-ライセンス)
 <br><br>
 
 ## 1. 概要
@@ -134,6 +135,81 @@ npm run test:coverage
 - 関数カバレッジ: 100%
 <br><br>
 
-## 6. ライセンス
+## 6. CI/CD
+
+このプロジェクトでは、GitHub ActionsとVercelを使用して継続的インテグレーション/継続的デプロイ（CI/CD）パイプラインを実装しています。
+
+### 継続的インテグレーション（CI）
+
+GitHub Actionsを使用して、以下の自動チェックを実行しています：
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+```
+
+このワークフローは以下を実行します：
+- コードのリント
+- テストの実行
+- ビルドの確認
+
+これにより、プルリクエストやmainブランチへのプッシュ時に、コードの品質を自動的に検証します。
+
+#### 環境変数の設定
+
+GitHub Actionsでビルドを行う際には、Supabaseの環境変数が必要です。以下の手順でGitHubのSecretsに環境変数を設定してください：
+
+1. GitHubリポジトリのページで「Settings」タブを選択
+2. 左側のメニューから「Secrets and variables」→「Actions」を選択
+3. 「New repository secret」ボタンをクリック
+4. 以下の環境変数を追加：
+   - `NEXT_PUBLIC_SUPABASE_URL`: SupabaseのURL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabaseの匿名キー
+
+これらのシークレットは、CIワークフローのビルドステップで自動的に使用されます。
+
+### 継続的デプロイ（CD）
+
+Vercelとの連携により、GitHubリポジトリへのプッシュ時に自動的にデプロイが行われます：
+
+- mainブランチへのプッシュ時に本番環境へ自動デプロイ
+- プルリクエスト作成時にプレビュー環境へ自動デプロイ
+
+Vercelは自動的にビルドプロセスを実行し、成功した場合にのみデプロイを行います。
+
+<br><br>
+
+## 7. ライセンス
 
 このプロジェクトはMITライセンスの下で公開されています。
