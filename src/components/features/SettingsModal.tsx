@@ -82,12 +82,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
     if (isOpen) {
       setIsLoaded(false); // モーダルが開かれるたびにローディング状態にリセット
-      // setLocalWorkMinutes(workMinutes);
-      // setLocalBreakMinutes(breakMinutes);
-      // setWorkInput(workMinutes.toString());
-      // setBreakInput(breakMinutes.toString());
-      // setLocalVideoUrl(videoUrl);
-      // setLocalRestVideoUrl(restVideoUrl);
       fetchSettings();
     }
   }, [
@@ -243,9 +237,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <p className="font-bold text-lg text-secondary-700 dark:text-secondary-300">
                   作業時間
                 </p>
-                {/* <p className="text-xs text-gray-500 dark:text-gray-400">
-                  集中して作業する時間を設定
-                </p> */}
               </div>
             </div>
             <div className="relative mt-1">
@@ -300,9 +291,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <p className="font-bold text-lg text-primary-700 dark:text-primary-300">
                   休憩時間
                 </p>
-                {/* <p className="text-xs text-gray-500 dark:text-gray-400">
-                  リフレッシュする時間を設定
-                </p> */}
               </div>
             </div>
             <div className="relative mt-1">
@@ -329,7 +317,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </label>
         </div>
 
-        {/* YouTube URL（作業中）入力フィールド - 新デザイン */}
+        {/* YouTube URL（作業中）入力フィールド */}
         <div
           className="bg-gradient-to-r from-secondary-50 to-secondary-100 dark:from-dark-200/50 dark:to-dark-200/80
          p-5 rounded-xl shadow-md border border-secondary-200 dark:border-secondary-800/30
@@ -358,9 +346,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <p className="font-bold text-lg text-secondary-700 dark:text-secondary-300">
                   作業中のBGM
                 </p>
-                {/* <p className="text-xs text-gray-500 dark:text-gray-400">
-                  集中力を高める音楽のURLを入力
-                </p> */}
               </div>
             </div>
             <div className="relative mt-1">
@@ -390,7 +375,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </label>
         </div>
 
-        {/* YouTube URL（休憩中）入力フィールド - 新デザイン */}
+        {/* YouTube URL（休憩中）入力フィールド */}
         <div
           className="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-dark-200/50 dark:to-dark-200/80
          p-5 rounded-xl shadow-md border border-primary-200 dark:border-primary-800/30
